@@ -1,0 +1,10 @@
+F:\CODE\GIThub\2DTO3D\photosprocess\target\debug\deps\libweezl-181c8f0ad549bd77.rmeta: F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\weezl-0.1.8\src\lib.rs F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\weezl-0.1.8\src\decode.rs F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\weezl-0.1.8\src\encode.rs F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\weezl-0.1.8\src\error.rs
+
+F:\CODE\GIThub\2DTO3D\photosprocess\target\debug\deps\libweezl-181c8f0ad549bd77.rlib: F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\weezl-0.1.8\src\lib.rs F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\weezl-0.1.8\src\decode.rs F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\weezl-0.1.8\src\encode.rs F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\weezl-0.1.8\src\error.rs
+
+F:\CODE\GIThub\2DTO3D\photosprocess\target\debug\deps\weezl-181c8f0ad549bd77.d: F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\weezl-0.1.8\src\lib.rs F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\weezl-0.1.8\src\decode.rs F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\weezl-0.1.8\src\encode.rs F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\weezl-0.1.8\src\error.rs
+
+F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\weezl-0.1.8\src\lib.rs:
+F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\weezl-0.1.8\src\decode.rs:
+F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\weezl-0.1.8\src\encode.rs:
+F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\weezl-0.1.8\src\error.rs:

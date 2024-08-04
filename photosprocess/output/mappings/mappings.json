@@ -1,0 +1,74 @@
+[
+  {
+    "color": "紫色",
+    "model_path": "assets/models/default/school.obj",
+    "png_image_path": "",
+    "svg_image_path": "output/svgs/img/紫色_contour.svg"
+  },
+  {
+    "color": "深蓝色",
+    "model_path": "assets/models/default/villa.obj",
+    "png_image_path": "",
+    "svg_image_path": "output/svgs/img/深蓝色_contour.svg"
+  },
+  {
+    "color": "红色",
+    "model_path": "assets/models/default/shopping_center.obj",
+    "png_image_path": "",
+    "svg_image_path": "output/svgs/img/红色_contour.svg"
+  },
+  {
+    "color": "黄色",
+    "model_path": "assets/models/default/sports_facility.obj",
+    "png_image_path": "",
+    "svg_image_path": "output/svgs/img/黄色_contour.svg"
+  },
+  {
+    "color": "浅蓝色",
+    "model_path": "assets/models/default/apartment.obj",
+    "png_image_path": "",
+    "svg_image_path": "output/svgs/img/浅蓝色_contour.svg"
+  },
+  {
+    "color": "褐色",
+    "model_path": "assets/models/default/bridge.obj",
+    "png_image_path": "",
+    "svg_image_path": "output/svgs/img/褐色_contour.svg"
+  },
+  {
+    "color": "白色",
+    "model_path": "assets/models/default/road.obj",
+    "png_image_path": "",
+    "svg_image_path": "output/svgs/img/白色_contour.svg"
+  },
+  {
+    "color": "橙色",
+    "model_path": "assets/models/default/office_building.obj",
+    "png_image_path": "",
+    "svg_image_path": "output/svgs/img/橙色_contour.svg"
+  },
+  {
+    "color": "绿色",
+    "model_path": "assets/models/default/park.obj",
+    "png_image_path": "",
+    "svg_image_path": "output/svgs/img/绿色_contour.svg"
+  },
+  {
+    "color": "灰色",
+    "model_path": "assets/models/default/factory.obj",
+    "png_image_path": "",
+    "svg_image_path": "output/svgs/img/灰色_contour.svg"
+  },
+  {
+    "color": "粉红色",
+    "model_path": "assets/models/default/hospital.obj",
+    "png_image_path": "",
+    "svg_image_path": "output/svgs/img/粉红色_contour.svg"
+  },
+  {
+    "color": "黑色",
+    "model_path": "assets/models/default/warehouse.obj",
+    "png_image_path": "",
+    "svg_image_path": "output/svgs/img/黑色_contour.svg"
+  }
+]
