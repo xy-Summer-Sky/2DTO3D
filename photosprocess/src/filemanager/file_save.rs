@@ -2,7 +2,7 @@ pub mod svg_save_process {
     use std::fs::File;
     use std::io::prelude::*;
     use std::path::Path;
-    use crate::core::svgbaseprocess::generate_model_base_svg::ModelBase;
+    use crate::core_algorithm::svgbaseprocess::generate_model_base_svg::ModelBase;
 
     pub enum PathType {
         ModelBaseSaveSvgFile,

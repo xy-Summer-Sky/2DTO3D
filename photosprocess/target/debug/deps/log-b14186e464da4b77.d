@@ -1,0 +1,10 @@
+F:\CODE\GIThub\2DTO3D\photosprocess\target\debug\deps\liblog-b14186e464da4b77.rmeta: F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\log-0.4.22\src\lib.rs F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\log-0.4.22\src\macros.rs F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\log-0.4.22\src\serde.rs F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\log-0.4.22\src\__private_api.rs
+
+F:\CODE\GIThub\2DTO3D\photosprocess\target\debug\deps\liblog-b14186e464da4b77.rlib: F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\log-0.4.22\src\lib.rs F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\log-0.4.22\src\macros.rs F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\log-0.4.22\src\serde.rs F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\log-0.4.22\src\__private_api.rs
+
+F:\CODE\GIThub\2DTO3D\photosprocess\target\debug\deps\log-b14186e464da4b77.d: F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\log-0.4.22\src\lib.rs F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\log-0.4.22\src\macros.rs F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\log-0.4.22\src\serde.rs F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\log-0.4.22\src\__private_api.rs
+
+F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\log-0.4.22\src\lib.rs:
+F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\log-0.4.22\src\macros.rs:
+F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\log-0.4.22\src\serde.rs:
+F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\log-0.4.22\src\__private_api.rs:

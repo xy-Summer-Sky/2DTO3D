@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">width="30mm" height="30mm" xmlns="http://www.w3.org/2000/svg">
+            <rect x="0" y="0" width="30" height="30" fill="none" stroke="black"/>
+           
+            <g transform="translate(0,0)">
+                <use xlink:href="assets/models/default/objmodel/villa.obj" fill="深蓝色"/>
+            </g>
+        </svg>

@@ -7,6 +7,8 @@ mod hex_utils;
 mod image_processing;
 mod photoprocesstest;
 mod city_model;
+mod web;
+mod controller;
 
 pub use colormodel::ColorModel;
 pub use colormodel::ColorModelMapping;
@@ -18,7 +20,7 @@ pub use hex_utils::HexUtils;
 pub use city_model::combine_3d_models;
 pub use city_model::read_mappings;
 
-pub mod core {
+pub mod core_algorithm {
     pub mod svgbaseprocess;
     pub use svgbaseprocess::generate_model_base_svg;
 }
