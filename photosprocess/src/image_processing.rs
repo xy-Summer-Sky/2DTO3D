@@ -3,9 +3,9 @@ use std::path::Path;
 // image_processing.rs
 use image::{DynamicImage, GenericImageView, GrayImage, Luma, Rgb};
 use imageproc::edges::canny;
-use svg::Document;
-use svg::node::element::Path as SvgPath;
 use svg::node::element::path::Data;
+use svg::node::element::Path as SvgPath;
+use svg::Document;
 
 use crate::colormodel::ColorModel;
 
@@ -63,7 +63,12 @@ pub fn save_contours_as_svg(contours: &GrayImage, output_path: &Path) {
         }
     }
 
-    let path = SvgPath::new().set("fill", "none").set("stroke", "black").set("d", data);
-    let document = Document::new().set("viewBox", (0, 0, contours.width(), contours.height())).add(path);
+    let path = SvgPath::new()
+        .set("fill", "none")
+        .set("stroke", "black")
+        .set("d", data);
+    let document = Document::new()
+        .set("viewBox", (0, 0, contours.width(), contours.height()))
+        .add(path);
     svg::save(output_path, &document).unwrap();
 }

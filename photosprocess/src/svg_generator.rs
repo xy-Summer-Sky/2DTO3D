@@ -21,7 +21,8 @@ impl SVGGenerator {
                 svg_data.push_str(&format!("{},{} ", x, y));
             }
             svg_data.push_str("\" fill=\"none\" stroke=\"black\"/></svg>");
-            file.write_all(svg_data.as_bytes()).expect("Unable to write data");
+            file.write_all(svg_data.as_bytes())
+                .expect("Unable to write data");
             svg_files.push(file_name);
         }
         svg_files

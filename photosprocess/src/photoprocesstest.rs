@@ -1,19 +1,11 @@
-use std::fs::File;
-use std::path::PathBuf;
-use std::collections::HashMap;
-use serde::Deserialize;
 use image::{DynamicImage, GenericImageView, GrayImage, Luma, Rgb};
-use imageproc::edges::canny;
 use imageproc::definitions::Image;
-use imageproc::map::map_colors;
-use imageproc::pixelops::interpolate;
-use imageproc::rect::Rect;
-use imageproc::drawing::draw_hollow_rect_mut;
-use imageproc::drawing::draw_filled_rect_mut;
-use imageproc::drawing::draw_text_mut;
-use rusttype::{Font, Scale};
-use std::fs;
+use imageproc::edges::canny;
+use serde::Deserialize;
+use std::collections::HashMap;
+use std::fs::File;
 use std::io::BufReader;
+use std::path::PathBuf;
 
 #[derive(Deserialize)]
 struct ColorModel {
@@ -73,9 +65,11 @@ fn extract_hsv_regions(image: &DynamicImage, color_model: &ColorModel) -> Image<
 
 fn main() {
     // 加载颜色模型映射
-    let file = File::open("config/color_model_mapping.json").expect("Failed to open color model mapping file");
+    let file = File::open("config/color_model_mapping.json")
+        .expect("Failed to open color model mapping file");
     let reader = BufReader::new(file);
-    let color_model_mapping: ColorModelMapping = serde_json::from_reader(reader).expect("Failed to parse color model mapping");
+    let color_model_mapping: ColorModelMapping =
+        serde_json::from_reader(reader).expect("Failed to parse color model mapping");
 
     // 读取图片
     let image_path = PathBuf::from("assets/images/img.png");
@@ -85,7 +79,9 @@ fn main() {
     for (name, color_model) in &color_model_mapping.colors {
         let hsv_regions = extract_hsv_regions(&image, color_model);
         let output_path = format!("output/{}_hsv_regions.png", name);
-        hsv_regions.save(&output_path).expect("Failed to save HSV regions image");
+        hsv_regions
+            .save(&output_path)
+            .expect("Failed to save HSV regions image");
         println!("Saved HSV regions for {} to {}", name, output_path);
     }
 }

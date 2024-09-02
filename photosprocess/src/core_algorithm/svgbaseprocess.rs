@@ -1,11 +1,11 @@
 // src/core_algorithm/svgbaseprocess.rs
 
 pub mod generate_model_base_svg {
+    use serde::Deserialize;
+    use serde_json;
     use std::f32::consts::SQRT_2;
     use std::fs::File;
     use std::io::{self, Read};
-    use serde::Deserialize;
-    use serde_json;
 
     #[derive(Deserialize)]
     pub struct ColorModel {
@@ -30,7 +30,8 @@ pub mod generate_model_base_svg {
 
         fn calculate_rotatable_square_size(&self, obj_file_path: &str) -> u32 {
             // Load the OBJ file
-            let (models, _materials) = tobj::load_obj(obj_file_path, &tobj::LoadOptions::default()).expect("Failed to load OBJ file");
+            let (models, _materials) = tobj::load_obj(obj_file_path, &tobj::LoadOptions::default())
+                .expect("Failed to load OBJ file");
 
             // Calculate the bounding box of the model
             let mut min_x = f32::MAX;
@@ -46,12 +47,24 @@ pub mod generate_model_base_svg {
                     let y = vertex[1];
                     let z = vertex[2];
 
-                    if x < min_x { min_x = x; }
-                    if y < min_y { min_y = y; }
-                    if z < min_z { min_z = z; }
-                    if x > max_x { max_x = x; }
-                    if y > max_y { max_y = y; }
-                    if z > max_z { max_z = z; }
+                    if x < min_x {
+                        min_x = x;
+                    }
+                    if y < min_y {
+                        min_y = y;
+                    }
+                    if z < min_z {
+                        min_z = z;
+                    }
+                    if x > max_x {
+                        max_x = x;
+                    }
+                    if y > max_y {
+                        max_y = y;
+                    }
+                    if z > max_z {
+                        max_z = z;
+                    }
                 }
             }
 
@@ -62,7 +75,7 @@ pub mod generate_model_base_svg {
 
             // Use the largest dimension to calculate the square side
             let max_dimension = width.max(height);
-                // .max(depth);
+            // .max(depth);
             let square_side = (max_dimension * SQRT_2).ceil() as u32;
             square_side
         }
@@ -77,7 +90,10 @@ pub mod generate_model_base_svg {
             )
         }
 
-        pub fn generate_svg_base_all(&self, json_file_path: &str) -> io::Result<Vec<(String, String)>> {
+        pub fn generate_svg_base_all(
+            &self,
+            json_file_path: &str,
+        ) -> io::Result<Vec<(String, String)>> {
             // Load the JSON configuration file into a ColorModelMapping
             let mut file = File::open(json_file_path)?;
             let mut contents = String::new();
@@ -94,7 +110,8 @@ pub mod generate_model_base_svg {
             </g>
         </svg>"#,
                     base_svg.trim_end_matches("</svg>"), // Remove the closing tag to append new content
-                    model.model_path, color
+                    model.model_path,
+                    color
                 );
                 let svg_content_with_namespace = format!(
                     r#"<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">{}</svg>"#,
@@ -106,6 +123,4 @@ pub mod generate_model_base_svg {
             Ok(svg_files)
         }
     }
-
-
 }

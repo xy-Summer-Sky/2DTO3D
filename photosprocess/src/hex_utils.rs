@@ -3,7 +3,10 @@ pub struct HexUtils;
 
 impl HexUtils {
     pub fn path_to_hex(path: &str) -> String {
-        path.as_bytes().iter().map(|b| format!("{:02x}", b)).collect()
+        path.as_bytes()
+            .iter()
+            .map(|b| format!("{:02x}", b))
+            .collect()
     }
 
     pub fn hex_to_path(hex: &str) -> Result<String, HexToPathError> {

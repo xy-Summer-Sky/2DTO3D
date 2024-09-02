@@ -1,4 +1,1 @@
-pub mod file_path_convert
-{
-
-}
+pub mod file_path_convert {}

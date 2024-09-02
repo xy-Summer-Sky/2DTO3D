@@ -21,7 +21,8 @@ impl Transformation {
         for entry in entries {
             let entry = entry?;
             let path = entry.path();
-            if path.is_file() && path.extension().and_then(std::ffi::OsStr::to_str) == Some("json") {
+            if path.is_file() && path.extension().and_then(std::ffi::OsStr::to_str) == Some("json")
+            {
                 let hex_path = HexUtils::path_to_hex(path.to_str().unwrap()); // Convert path to hex
                 let decoded_path = HexUtils::hex_to_path(&hex_path).unwrap(); // Decode hex path back to string
                 self.rules.push(decoded_path);

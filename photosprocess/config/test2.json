@@ -1,0 +1,106 @@
+{
+  "蓝色": {
+    "rgb": [
+      0,
+      0,
+      255
+    ],
+    "hex": "#0000FF",
+    "hsv_range": [
+      [
+        90,
+        50,
+        50
+      ],
+      [
+        130,
+        100,
+        100
+      ]
+    ],
+    "model_path": "assets/models/custom/House/House.obj",
+    "side_length": 23.096615,
+    "center_point": [
+      -0.812618,
+      -0.49830818
+    ]
+  },
+  "红色": {
+    "rgb": [
+      255,
+      0,
+      0
+    ],
+    "hex": "#FF0000",
+    "hsv_range": [
+      [
+        0,
+        70,
+        50
+      ],
+      [
+        10,
+        255,
+        255
+      ]
+    ],
+    "model_path": "assets/models/custom/House/House.obj",
+    "side_length": 23.096615,
+    "center_point": [
+      -0.812618,
+      -0.49830818
+    ]
+  },
+  "黄色": {
+    "rgb": [
+      255,
+      255,
+      0
+    ],
+    "hex": "#FFFF00",
+    "hsv_range": [
+      [
+        25,
+        100,
+        100
+      ],
+      [
+        35,
+        255,
+        255
+      ]
+    ],
+    "model_path": "assets/models/custom/House/House.obj",
+    "side_length": 23.096615,
+    "center_point": [
+      -0.812618,
+      -0.49830818
+    ]
+  },
+  "绿色": {
+    "rgb": [
+      0,
+      255,
+      0
+    ],
+    "hex": "#00FF00",
+    "hsv_range": [
+      [
+        35,
+        100,
+        100
+      ],
+      [
+        85,
+        255,
+        255
+      ]
+    ],
+    "model_path": "assets/models/custom/House/House.obj",
+    "side_length": 23.096615,
+    "center_point": [
+      -0.812618,
+      -0.49830818
+    ]
+  }
+}

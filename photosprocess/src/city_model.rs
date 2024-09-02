@@ -1,11 +1,11 @@
-// src/city_model.rs
 use std::fs::File;
 use std::io::{BufReader, BufWriter, Write};
-use serde::{Deserialize, Serialize};
-use serde_json::from_reader;
-use std::path::Path;
+
+// src/city_model.rs
 use roxmltree::Document;
+use serde::Deserialize;
 use serde_json::de::Read;
+use serde_json::from_reader;
 
 #[derive(Deserialize)]
 pub struct Mapping {
@@ -30,8 +30,10 @@ pub fn combine_3d_models(mappings: Vec<Mapping>, output_path: &str) {
             .expect(&format!("Failed to read OBJ file: {}", &mapping.model_path));
 
         // 读取并处理SVG图形
-        let svg_data = std::fs::read_to_string(&mapping.svg_image_path)
-            .expect(&format!("Failed to read SVG file: {}", &mapping.svg_image_path));
+        let svg_data = std::fs::read_to_string(&mapping.svg_image_path).expect(&format!(
+            "Failed to read SVG file: {}",
+            &mapping.svg_image_path
+        ));
         let svg_path = get_svg_path(&svg_data);
         let svg_area = calculate_polygon_area(&svg_path);
 
@@ -51,13 +53,16 @@ pub fn combine_3d_models(mappings: Vec<Mapping>, output_path: &str) {
                     // 修改模型坐标以匹配SVG路径点的位置
                     coords[0] += svg_x;
                     coords[1] += svg_y;
-                    combined_obj_data.push_str(&format!("v {} {} {}\n", coords[0], coords[1], coords[2]));
+                    combined_obj_data
+                        .push_str(&format!("v {} {} {}\n", coords[0], coords[1], coords[2]));
                 } else if line.starts_with("f ") {
-                    let face_data: Vec<String> = line.split_whitespace()
+                    let face_data: Vec<String> = line
+                        .split_whitespace()
                         .skip(1)
                         .map(|v| {
                             let mut indices: Vec<&str> = v.split('/').collect();
-                            let binding = (indices[0].parse::<usize>().unwrap() + vertex_offset).to_string();
+                            let binding =
+                                (indices[0].parse::<usize>().unwrap() + vertex_offset).to_string();
                             indices[0] = &binding;
                             indices.join("/")
                         })
@@ -66,12 +71,18 @@ pub fn combine_3d_models(mappings: Vec<Mapping>, output_path: &str) {
                 }
             }
 
-            vertex_offset += obj_data.lines().filter(|line| line.starts_with("v ")).count();
+            vertex_offset += obj_data
+                .lines()
+                .filter(|line| line.starts_with("v "))
+                .count();
         }
     }
 
-    let mut output_file = BufWriter::new(File::create(output_path).expect("Failed to create output OBJ file"));
-    output_file.write_all(combined_obj_data.as_bytes()).expect("Failed to write combined OBJ data");
+    let mut output_file =
+        BufWriter::new(File::create(output_path).expect("Failed to create output OBJ file"));
+    output_file
+        .write_all(combined_obj_data.as_bytes())
+        .expect("Failed to write combined OBJ data");
 }
 
 fn get_svg_path(svg_data: &str) -> Vec<(f32, f32)> {
@@ -136,7 +147,9 @@ pub fn calculate_svg_center(svg_data: &str) -> (f32, f32) {
         }
     }
 
-    let (sum_x, sum_y) = path_points.iter().fold((0.0, 0.0), |(acc_x, acc_y), &(x, y)| (acc_x + x, acc_y + y));
+    let (sum_x, sum_y) = path_points
+        .iter()
+        .fold((0.0, 0.0), |(acc_x, acc_y), &(x, y)| (acc_x + x, acc_y + y));
     let count = path_points.len() as f32;
     (sum_x / count, sum_y / count)
 }
@@ -165,8 +178,6 @@ fn parse_svg_path(d: &str) -> Vec<(f32, f32)> {
 
     points
 }
-
-use std::iter::Peekable;
 
 fn is_digit(c: char) -> bool {
     c >= '0' && c <= '9'

@@ -1,0 +1,11 @@
+{
+
+
+  "青色": {
+    "rgb": [0, 255, 255],
+    "hex": "#00FFFF",
+    "hsv_range": [[90, 100, 100], [130, 255, 255]],
+    "model_path": "assets/models/default/objmodel/apartment.obj",
+    "side_length": 30
+  }
+}
