@@ -15,7 +15,7 @@ jobs:
       - name: Set up Rust
         run: |
           curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain 1.80.1
-          echo "::add-path::${HOME}/.cargo/bin"
+          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
 
       - name: Set environment variables
         run: |
@@ -28,7 +28,9 @@ jobs:
           LLVM_CONFIG_PATH: ${{ env.LLVM_CONFIG_PATH }}
           LIBCLANG_PATH: ${{ env.LIBCLANG_PATH }}
           PKG_CONFIG_PATH: ${{ env.PKG_CONFIG_PATH }}
-        run: cargo build --release
+        run: |
+          . $HOME/.cargo/env
+          cargo build --release
 
       - name: Build the Docker image
         run: |
