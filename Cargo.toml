@@ -46,11 +46,11 @@ path = "src/bin/project_structure.rs"
 name = "hsv_contour_detection"
 path = "src/bin/hsv_contour_detection.rs"
 
-[[bin]]
-name ="merge_model_fbx"
-path = "src/bin/merge_model_fbx.rs"
+#[[bin]]
+#name ="merge_model_fbx"
+#path = "src/bin/merge_model_fbx.rs"
 
-[[bin]]
-name = "merge_model_gltf"
-path = "src/bin/merge_model_gltf.rs"
+#[[bin]]
+#name = "merge_model_gltf"
+#path = "src/bin/merge_model_gltf.rs"
 
