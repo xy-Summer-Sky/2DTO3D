@@ -1,6 +1,6 @@
 // hsv_processing.rs
 use crate::colormodel::ColorModel;
-use image::{DynamicImage, GenericImageView, ImageBuffer, Luma, Rgb};
+use image::{DynamicImage, GenericImageView, ImageBuffer, Luma};
 use imageproc::edges::canny;
 use std::path::Path;
 use svg::node::element::path::Data;

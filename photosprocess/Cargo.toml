@@ -33,6 +33,7 @@ fbxcel-dom = "0.0.10"
 gltf-json = "1.4.1"
 indexmap = "2.4.0"
 zip = "2.2.0"
+clang-sys = "1.8.1"
 [[bin]]
 name="model_base_process"
 path = "src/bin/model_base_process.rs"

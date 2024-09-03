@@ -19,7 +19,7 @@ async fn main() -> std::io::Result<()> {
             .route("/models/{id}", web::get().to(model_controller::get_model))
             .route("/users", web::get().to(user_controller::list_users))
             .route("/users/{id}", web::get().to(user_controller::get_user))
-            .route("/generate_model_positions", web::post().to(controllers::model_controller::generate_model_positions_handler))
+           // .route("/generate_model_positions", web::post().to(controllers::model_controller::generate_model_positions_handler))
     })
         .bind("127.0.0.1:8080")?
         .run()

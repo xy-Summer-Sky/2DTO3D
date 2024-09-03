@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">width="80mm" height="80mm" xmlns="http://www.w3.org/2000/svg">
-            <rect x="0" y="0" width="80" height="80" fill="none" stroke="black"/>
-           
-            <g transform="translate(0,0)">
-                <use xlink:href="assets/models/default/objmodel/road.obj" fill="白色"/>
-            </g>
-        </svg>

@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">width="120mm" height="120mm" xmlns="http://www.w3.org/2000/svg">
-            <rect x="0" y="0" width="120" height="120" fill="none" stroke="black"/>
-           
-            <g transform="translate(0,0)">
-                <use xlink:href="assets/models/default/objmodel/hospital.obj" fill="粉红色"/>
-            </g>
-        </svg>

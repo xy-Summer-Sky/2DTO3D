@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">width="150mm" height="150mm" xmlns="http://www.w3.org/2000/svg">
-            <rect x="0" y="0" width="150" height="150" fill="none" stroke="black"/>
-           
-            <g transform="translate(0,0)">
-                <use xlink:href="assets/models/default/objmodel/school.obj" fill="紫色"/>
-            </g>
-        </svg>

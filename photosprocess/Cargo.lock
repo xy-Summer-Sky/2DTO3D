@@ -1976,6 +1976,7 @@ dependencies = [
  "actix-web",
  "anyhow",
  "cc",
+ "clang-sys",
  "clap",
  "fbxcel",
  "fbxcel-dom",

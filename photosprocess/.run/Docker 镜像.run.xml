@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Docker 镜像" type="docker-deploy" factoryName="docker-image" editBeforeRun="true" focusToolWindowBeforeRun="true" server-name="Docker">
+    <deployment type="docker-image">
+      <settings>
+        <option name="imageTag" value="photosprocess:latest" />
+        <option name="containerName" value="1.0" />
+      </settings>
+    </deployment>
+    <method v="2" />
+  </configuration>
+</component>
