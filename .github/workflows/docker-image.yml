@@ -7,22 +7,27 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Install LLVM and Clang
+      - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y llvm-14 clang-14
+          sudo apt-get install -y curl build-essential llvm-14 clang-14 libclang-14-dev gcc pkg-config libopencv-dev
 
       - name: Set up Rust
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: 1.80.1
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain 1.80.1
+          echo "::add-path::${HOME}/.cargo/bin"
 
-      - name: Set LLVM_CONFIG_PATH
-        run: echo "LLVM_CONFIG_PATH=$(which llvm-config-14)" >> $GITHUB_ENV
+      - name: Set environment variables
+        run: |
+          echo "LLVM_CONFIG_PATH=/usr/lib/llvm-14/bin/llvm-config" >> $GITHUB_ENV
+          echo "LIBCLANG_PATH=/usr/lib/llvm-14/lib" >> $GITHUB_ENV
+          echo "PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig" >> $GITHUB_ENV
 
       - name: Build with Cargo
         env:
           LLVM_CONFIG_PATH: ${{ env.LLVM_CONFIG_PATH }}
+          LIBCLANG_PATH: ${{ env.LIBCLANG_PATH }}
+          PKG_CONFIG_PATH: ${{ env.PKG_CONFIG_PATH }}
         run: cargo build --release
 
       - name: Build the Docker image
