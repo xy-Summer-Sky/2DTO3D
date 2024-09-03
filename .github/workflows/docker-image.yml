@@ -7,10 +7,18 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Install LLVM and Clang
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y llvm clang
+
       - name: Set up Rust
         uses: actions-rs/toolchain@v1
         with:
-          toolchain: stable
+          toolchain: 1.80.1
+
+      - name: Set LLVM_CONFIG_PATH
+        run: echo "LLVM_CONFIG_PATH=$(which llvm-config)" >> $GITHUB_ENV
 
       - name: Build with Cargo
         run: cargo build --release

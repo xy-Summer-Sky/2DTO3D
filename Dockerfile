@@ -13,16 +13,17 @@ ENV HOME=/root
 # Copy the Cargo.toml and Cargo.lock files
 COPY Cargo.toml Cargo.lock ./
 
-# Install Rust, Cargo, build-essential, llvm, and clang
+# Install Rust, Cargo, build-essential, llvm, clang, libclang, gcc, pkg-config, and OpenCV
 RUN apt-get update && \
-    apt-get install -y curl build-essential llvm clang && \
-    curl https://sh.rustup.rs -sSf | sh -s -- -y && \
+    apt-get install -y curl build-essential llvm-14 clang-14 libclang-14-dev gcc pkg-config libopencv-dev && \
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain 1.80.1 && \
     . $HOME/.cargo/env && \
     cargo fetch
 
-# Set environment variables for llvm-config and libclang
-ENV LLVM_CONFIG_PATH=/usr/bin/llvm-config
+# Set environment variables for llvm-config, libclang, and pkg-config
+ENV LLVM_CONFIG_PATH=/usr/lib/llvm-14/bin/llvm-config
 ENV LIBCLANG_PATH=/usr/lib/llvm-14/lib
+ENV PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig
 
 # Copy the source code
 COPY src ./src
