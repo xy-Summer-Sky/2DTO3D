@@ -34,17 +34,17 @@ gltf-json = "1.4.1"
 indexmap = "2.4.0"
 zip = "2.2.0"
 clang-sys = "1.8.1"
-[[bin]]
-name="model_base_process"
-path = "src/bin/model_base_process.rs"
-
-[[bin]]
-name = "project_structure"
-path = "src/bin/project_structure.rs"
-
-[[bin]]
-name = "hsv_contour_detection"
-path = "src/bin/hsv_contour_detection.rs"
+#[[bin]]
+#name="model_base_process"
+#path = "src/bin/model_base_process.rs"
+#
+#[[bin]]
+#name = "project_structure"
+#path = "src/bin/project_structure.rs"
+#
+#[[bin]]
+#name = "hsv_contour_detection"
+#path = "src/bin/hsv_contour_detection.rs"
 
 #[[bin]]
 #name ="merge_model_fbx"
