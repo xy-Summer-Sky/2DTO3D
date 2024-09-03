@@ -19,8 +19,8 @@ jobs:
         run: |
           docker version
           # Login to Alibaba Cloud Container Registry
-          docker login --username=${{ secrets.SUMMER }} --password=${{ secrets.TEST }} registry.cn-hangzhou.aliyuncs.com
+          docker login --username=${{ secrets.SUMMER }} --password=${{ secrets.TEST }} registry.ap-southeast-1.aliyuncs.com
           # Build the Docker image using Dockerfile
-          docker build . --file Dockerfile --tag registry.cn-hangzhou.aliyuncs.com/3d_render/3d:latest
+          docker build . --file Dockerfile --tag registry.ap-southeast-1.aliyuncs.com/3d_render/3d:latest
           # Push the Docker image to the registry
-          docker push registry.cn-hangzhou.aliyuncs.com/3d_render/3d:latest
+          docker push registry.ap-southeast-1.aliyuncs.com/3d_render/3d:latest
