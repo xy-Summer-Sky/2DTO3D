@@ -1,0 +1,10 @@
+F:\CODE\GIThub\2DTO3D\photosprocess\target\debug\deps\libidna-25e556e25cc21d62.rmeta: F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\idna-0.5.0\src\lib.rs F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\idna-0.5.0\src\punycode.rs F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\idna-0.5.0\src\uts46.rs F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\idna-0.5.0\src\uts46_mapping_table.rs
+
+F:\CODE\GIThub\2DTO3D\photosprocess\target\debug\deps\libidna-25e556e25cc21d62.rlib: F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\idna-0.5.0\src\lib.rs F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\idna-0.5.0\src\punycode.rs F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\idna-0.5.0\src\uts46.rs F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\idna-0.5.0\src\uts46_mapping_table.rs
+
+F:\CODE\GIThub\2DTO3D\photosprocess\target\debug\deps\idna-25e556e25cc21d62.d: F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\idna-0.5.0\src\lib.rs F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\idna-0.5.0\src\punycode.rs F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\idna-0.5.0\src\uts46.rs F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\idna-0.5.0\src\uts46_mapping_table.rs
+
+F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\idna-0.5.0\src\lib.rs:
+F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\idna-0.5.0\src\punycode.rs:
+F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\idna-0.5.0\src\uts46.rs:
+F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\idna-0.5.0\src\uts46_mapping_table.rs:
