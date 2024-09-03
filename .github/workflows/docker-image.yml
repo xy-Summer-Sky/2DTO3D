@@ -1,0 +1,26 @@
+name: Docker Image CI
+on:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Rust
+        uses: actions/setup-rust@v1
+        with:
+          rust-version: stable
+
+      - name: Build with Cargo
+        run: cargo build --release
+
+      - name: Build the Docker image
+        run: |
+          docker version
+          # Login to Alibaba Cloud Container Registry
+          docker login --username=${{ secrets.SUMMER }} --password=${{ secrets.TEST }} registry.cn-hangzhou.aliyuncs.com
+          # Build the Docker image using Dockerfile
+          docker build . --file Dockerfile --tag registry.cn-hangzhou.aliyuncs.com/3d_render/3d:latest
+          # Push the Docker image to the registry
+          docker push registry.cn-hangzhou.aliyuncs.com/3d_render/3d:latest
