@@ -3,11 +3,14 @@ pub mod controllers;
 
 mod web;
 mod entity;
-mod dbmanager;
+pub mod pool;
 mod dao;
 mod service;
 mod core_algorithm;
-pub mod api1;
+
+pub mod schema;
+pub mod config;
+
 
 pub mod file_path {
     pub mod file_path_process;

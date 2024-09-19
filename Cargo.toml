@@ -4,6 +4,16 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+actix-rt = "2.5.0"
+bcrypt = "0.15.1"
+itertools = "0.13.0"
+geo-types="0.7.13"
+nalgebra = "0.33.0"
+delaunator = "1.0.2"
+plotters = "0.3.7"
+mysqlclient-sys = "0.4.1"
+diesel= { version = "2.2.4", features = ["mysql","r2d2","chrono"] }
+dotenv ={version = "0.15.0",default-features = true}
 image = "0.25.2"
 imageproc = "0.25.0"
 serde = { version = "1.0.204", features = ["derive"] }
@@ -23,7 +33,7 @@ sanitize-filename = "0.5.0"
 actix-cors="0.7.0"
 actix-files = "0.6.6"
 futures = "0.3.30"
-opencv = {version = "0.92.2", default-features = false,features = ["imgcodecs","imgproc","highgui","videoio"]}
+opencv = {version = "0.93.0", default-features = false,features = ["imgcodecs","imgproc","highgui","videoio"]}
 lazy_static = "1.5.0"
 anyhow = "1.0.86"
 cc = "1.1.8"
@@ -35,6 +45,10 @@ indexmap = "2.4.0"
 zip = "2.2.0"
 clang-sys = "1.8.1"
 base64 = "0.22.1"
+geo="0.28.0"
+chrono = { version = "0.4.38", features = ["serde"] }
+async-trait = "0.1.82"
+rand = "0.8.5"
 [lib]
 name = "photosprocess"
 path = "src/lib.rs"

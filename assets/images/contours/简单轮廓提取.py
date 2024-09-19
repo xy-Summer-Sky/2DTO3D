@@ -453,268 +453,9 @@ def count_zoom(flag, step, zoom):
     zoom = round(zoom, 2)  # 取2位有效数字
     return zoom
 
-# def mouse(event,x,y,flags,param): #鼠标事件回调函数
-#     global g_location_click, g_location_release, g_image_show, g_image_zoom, g_location_win, location_win, g_zoom,p
-#     #参数 （事件，x轴位置，y轴位置，标记，属性）
-#     """
-#     event:
-#         EVENT_MOUSEMOVE 0            #滑动
-#         EVENT_LBUTTONDOWN 1          #左键点击
-#         EVENT_RBUTTONDOWN 2          #右键点击
-#         EVENT_MBUTTONDOWN 3          #中键点击
-#         EVENT_LBUTTONUP 4            #左键放开
-#         EVENT_RBUTTONUP 5            #右键放开
-#         EVENT_MBUTTONUP 6            #中键放开
-#         EVENT_LBUTTONDBLCLK 7        #左键双击
-#         EVENT_RBUTTONDBLCLK 8        #右键双击
-#         EVENT_MBUTTONDBLCLK 9        #中键双击
-#     x,y:
-#         x,y，代表鼠标位于窗口的（x，y）坐标位置
-#     flags:
-#         代表鼠标的拖拽事件，以及键盘鼠标联合事件
-#         EVENT_FLAG_LBUTTON 1       #左鍵拖曳
-#         EVENT_FLAG_RBUTTON 2       #右鍵拖曳
-#         EVENT_FLAG_MBUTTON 4       #中鍵拖曳
-#         EVENT_FLAG_CTRLKEY 8       #(8~15)按Ctrl不放事件
-#         EVENT_FLAG_SHIFTKEY 16     #(16~31)按Shift不放事件
-#         EVENT_FLAG_ALTKEY 32       #(32~39)按Alt不放事件
-#         比如：按住CTRL键 单击左键  返回8+1=9
-#     :param param:不知道有什么用
-#     """
-#     if event == cv2.EVENT_LBUTTONDOWN:  # 左键点击
-#         g_location_click = [x, y]  # 左键点击时，鼠标相对于窗口的坐标
-#         location_win = [g_location_win[0], g_location_win[1]]  # 窗口相对于图片的坐标，不能写成location_win = g_location_win
-#
-#     elif event==cv2.EVENT_RBUTTONDOWN :
-#         g_original_h, g_original_w = g_image_zoom.shape[0:2]
-#         # 需要处理的mask区域设置为0，不考虑的地方设置为1
-#         mask = np.zeros((g_original_h + 2, g_original_w + 2, 1), np.uint8)
-#         mask[150:250, 150:250] = 0
-#         # print('mask')
-#         # print(mask)
-#         cv2.floodFill(g_image_zoom, mask, (g_location_win[0]+x, g_location_win[1]+y), (255, 0, 0), (30, 30, 30), (30, 30, 30), cv2.FLOODFILL_FIXED_RANGE)
-#         # cv2.circle(g_image_zoom,(g_location_win[0]+x, g_location_win[1]+y),20,255,-1)
-#         print('鼠标点击的坐标')
-#         print((x,y))
-#         print((g_location_win[0]+x, g_location_win[1]+y))
-#
-#         g_image_show = g_image_zoom[g_location_win[1]:g_location_win[1] + g_window_wh[1],
-#                        g_location_win[0]:g_location_win[0] + g_window_wh[0]]  # 实际的显示图片
-#
-#         # 在滚轮缩放时，g_image_zoom利用原图重新刷新，所以需要利用缩放仿射变换，对原图同样的地方进行泛洪填充
-#         scale = g_image_zoom.shape[1]/g_image_original.shape[1]
-#         original_x = (g_location_win[0]+x)/scale
-#         original_y = (g_location_win[1]+y)/scale
-#
-#         min_dist = float('inf')
-#         nearest_point = None
-#         for i in range(0 if 0 > math.floor(original_x) - 1 else math.floor(original_x)-1, math.ceil(original_x) + 1 if math.ceil(original_x) + 1 < g_image_original.shape[1] else g_image_original.shape[1]):
-#             for j in range(0 if 0 > math.floor(original_y) - 1 else math.floor(original_y) - 1, math.ceil(original_y) + 1 if math.ceil(original_y) + 1 < g_image_original.shape[0] else g_image_original.shape[0]):
-#                 dist = math.sqrt((original_x - i) ** 2 + (original_y - j) ** 2)
-#                 if dist < min_dist:
-#                     min_dist = dist
-#                     nearest_point = (i, j)
-#
-#         cv2.floodFill(g_image_original, mask_original, nearest_point, (255, 0, 0), (30, 30, 30),
-#                       (30, 30, 30), cv2.FLOODFILL_FIXED_RANGE)
-#
-#
-#     elif event == cv2.EVENT_MOUSEMOVE and (flags & cv2.EVENT_FLAG_LBUTTON):  # 按住左键拖曳
-#         g_location_release = [x, y]  # 左键拖曳时，鼠标相对于窗口的坐标
-#         h1, w1 = g_image_zoom.shape[0:2]  # 缩放图片的宽高
-#         w2, h2 = g_window_wh  # 窗口的宽高
-#         show_wh = [0, 0]  # 实际显示图片的宽高
-#         if w1 < w2 and h1 < h2:  # 图片的宽高小于窗口宽高，无法移动
-#             show_wh = [w1, h1]
-#             g_location_win = [0, 0]
-#         elif w1 >= w2 and h1 < h2:  # 图片的宽度大于窗口的宽度，可左右移动
-#             show_wh = [w2, h1]
-#             g_location_win[0] = location_win[0] + g_location_click[0] - g_location_release[0]
-#         elif w1 < w2 and h1 >= h2:  # 图片的高度大于窗口的高度，可上下移动
-#             show_wh = [w1, h2]
-#             g_location_win[1] = location_win[1] + g_location_click[1] - g_location_release[1]
-#         else:  # 图片的宽高大于窗口宽高，可左右上下移动
-#             show_wh = [w2, h2]
-#             g_location_win[0] = location_win[0] + g_location_click[0] - g_location_release[0]
-#             g_location_win[1] = location_win[1] + g_location_click[1] - g_location_release[1]
-#         check_location([w1, h1], [w2, h2], g_location_win)  # 矫正窗口在图片中的位置
-#         g_image_show = g_image_zoom[g_location_win[1]:g_location_win[1] + show_wh[1],
-#                        g_location_win[0]:g_location_win[0] + show_wh[0]]  # 实际显示的图片
-#     elif event == cv2.EVENT_MOUSEWHEEL:  # 滚轮
-#         z = g_zoom  # 缩放前的缩放倍数，用于计算缩放后窗口在图片中的位置
-#         g_zoom = count_zoom(flags, g_step, g_zoom)  # 计算缩放倍数
-#         w1, h1 = [int(g_image_original.shape[1] * g_zoom), int(g_image_original.shape[0] * g_zoom)]  # 缩放图片的宽高
-#         w2, h2 = g_window_wh  # 窗口的宽高
-#         g_image_zoom = cv2.resize(g_image_original, (w1, h1), interpolation=cv2.INTER_AREA)  # 图片缩放
-#         show_wh = [w2, h2]  # 实际显示图片的宽高
-#         cv2.resizeWindow(g_window_name, w2, h2)
-#
-#         g_location_win = [int((g_location_win[0] + x) * g_zoom / z - x),
-#                           int((g_location_win[1] + y) * g_zoom / z - y)]  # 缩放后，窗口在图片的位置
-#         check_location([w1, h1], [w2, h2], g_location_win)  # 矫正窗口在图片中的位置
-#         # print(g_location_win, show_wh)
-#         g_image_show = g_image_zoom[g_location_win[1]:g_location_win[1] + show_wh[1],
-#                        g_location_win[0]:g_location_win[0] + show_wh[0]]  # 实际的显示图片
-#
-#     cv2.imshow(g_window_name, g_image_show)
 
-    # cv2.imshow("haha",g_image_original)
-
-# 主函数
-# if __name__ == "__main__":
-#     # 设置窗口
-#     cv2.namedWindow(g_window_name, cv2.WINDOW_NORMAL)
-#     # 设置窗口大小，只有当图片大于窗口时才能移动图片
-#     cv2.resizeWindow(g_window_name, g_window_wh[0], g_window_wh[1])
-#     cv2.moveWindow(g_window_name, 500, 100)  # 设置窗口在电脑屏幕中的位置
-#     # 鼠标事件的回调函数
-#     cv2.setMouseCallback(g_window_name, mouse)
-#     cv2.imshow(g_window_name, g_image_show)
-#     cv2.waitKey()  # 不可缺少，用于刷新图片，等待鼠标操作
-#
-#     cv2.destroyAllWindows()
-#     # 保存结果
-#     cv2.imwrite('floodfill.png',g_image_zoom)
-#
-#     # 提取特定颜色像素点
-#     mask = cv2.inRange(g_image_original, (255, 0, 0), (255, 0, 0))
-#
-#     white_g_image_original = g_image_original
-#
-#
-#     # 将特定颜色像素点变为白色，其余像素点变为黑色
-#     g_image_original[mask == 255] = [255, 255, 255]
-#     g_image_original[mask != 255] = [0, 0, 0]
-#
-#
-#     # white_g_image_original[mask == 255] = [200, 100, 100]
-#     # white_g_image_original[mask != 255] = [255, 255, 255]
-#     # 显示处理后的图像
-#     # cv2.imshow('image', white_g_image_original)
-#     cv2.waitKey(0)
-#     cv2.destroyAllWindows()
-#
-#     # 保存结果
-#     cv2.imwrite('test.png', g_image_original)
-#
-#     image = cv2.imread("test.png")
-#     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-#
-#     # 膨胀操作
-#     kernel = np.ones((5, 5), np.uint8)
-#     # print("kernel")
-#     # print(kernel)
-#     dilation = cv2.dilate(gray, kernel, iterations=1)
-#     dilation = cv2.erode(dilation,kernel,iterations=1)
-#
-#     dilation_color=np.ones_like(image)*255
-#     dilation_color[dilation==255] = [200,150,150]
-#
-#     cv2.imwrite('dilation.png', dilation)
-#     cv2.imwrite('dilation_color.png', dilation_color)
-#
-#     image = cv2.imread("dilation.png")
-#     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-#
-#     ret, image = cv2.threshold(gray, 127, 255, 0)
-#     # cv2.imshow("image",image)
-#     cv2.waitKey()
-#
-#     contour = find_contour_outline(image)
-#     print("失真程度为0.002*周长以内的点结果")
-# #     print(contour)
-#     for i in range(len(contour)):
-#         print('['+str(contour[i][0])+','+str(contour[i][1])+'],')
-#     print(len(contour))
-#     middle_part = contour[:-1]
-#     n = 16
-#     # 计算实际右移位数
-#     n %= len(middle_part)
-#
-#     # 将右移后的部分与首尾元素重新组合
-#     contour = np.vstack([middle_part[n:], middle_part[:n]])
-#     contour = np.vstack([contour, contour[0]])
-#
-#     points = [Point(lon, lat).__dict__ for lon, lat in contour]
-#     points = points[:-1]
-#     for point in points:
-#         point['height'] = 100
-#     # print(points)
-#
-#     # 数据输入
-#     json_data_example = {
-#     "buildingArray": [
-#             {
-#                 "name": "Building1",
-#                 "points": [],
-#                 "pointsOrder": "order",
-#                 "center": {"lon": 0, "lat": 0}
-#             }
-#         ]
-#     }
-#     json_data_example["buildingArray"][0]["points"]=points
-#     print(json_data_example)
-#     read_data(json_data_example)
 global  g_window_name
-# def mouse(event, x, y, flags, param):  # 鼠标事件回调函数
-#     # global g_location_click, g_location_release, g_image_show, g_image_zoom, g_location_win, location_win, g_zoom, p
-#     if event == cv2.EVENT_LBUTTONDOWN:  # 左键点击
-#         g_location_click = [x, y]  # 左键点击时，鼠标相对于窗口的坐标
-#         location_win = [g_location_win[0], g_location_win[1]]  # 窗口相对于图片的坐标，不能写成location_win = g_location_win
-#
-#     elif event == cv2.EVENT_RBUTTONDOWN:
-#         g_original_h, g_original_w = g_image_zoom.shape[0:2]
-#         mask = np.zeros((g_original_h + 2, g_original_w + 2, 1), np.uint8)
-#         mask[150:250, 150:250] = 0
-#         cv2.floodFill(g_image_zoom, mask, (g_location_win[0] + x, g_location_win[1] + y), (255, 0, 0), (30, 30, 30), (30, 30, 30), cv2.FLOODFILL_FIXED_RANGE)
-#         scale = g_image_zoom.shape[1] / g_image_original.shape[1]
-#         original_x = (g_location_win[0] + x) / scale
-#         original_y = (g_location_win[1] + y) / scale
-#
-#         min_dist = float('inf')
-#         nearest_point = None
-#         for i in range(0 if 0 > math.floor(original_x) - 1 else math.floor(original_x) - 1, math.ceil(original_x) + 1 if math.ceil(original_x) + 1 < g_image_original.shape[1] else g_image_original.shape[1]):
-#             for j in range(0 if 0 > math.floor(original_y) - 1 else math.floor(original_y) - 1, math.ceil(original_y) + 1 if math.ceil(original_y) + 1 < g_image_original.shape[0] else g_image_original.shape[0]):
-#                 dist = math.sqrt((original_x - i) ** 2 + (original_y - j) ** 2)
-#                 if dist < min_dist:
-#                     min_dist = dist
-#                     nearest_point = (i, j)
-#
-#         cv2.floodFill(g_image_original, mask_original, nearest_point, (255, 0, 0), (30, 30, 30), (30, 30, 30), cv2.FLOODFILL_FIXED_RANGE)
-#
-#     elif event == cv2.EVENT_MOUSEMOVE and (flags & cv2.EVENT_FLAG_LBUTTON):  # 按住左键拖曳
-#         g_location_release = [x, y]  # 左键拖曳时，鼠标相对于窗口的坐标
-#         h1, w1 = g_image_zoom.shape[0:2]  # 缩放图片的宽高
-#         w2, h2 = g_window_wh  # 窗口的宽高
-#         show_wh = [0, 0]  # 实际显示图片的宽高
-#         if w1 < w2 and h1 < h2:  # 图片的宽高小于窗口宽高，无法移动
-#             show_wh = [w1, h1]
-#             g_location_win = [0, 0]
-#         elif w1 >= w2 and h1 < h2:  # 图片的宽度大于窗口的宽度，可左右移动
-#             show_wh = [w2, h1]
-#             g_location_win[0] = location_win[0] + g_location_click[0] - g_location_release[0]
-#         elif w1 < w2 and h1 >= h2:  # 图片的高度大于窗口的高度，可上下移动
-#             show_wh = [w1, h2]
-#             g_location_win[1] = location_win[1] + g_location_click[1] - g_location_release[1]
-#         else:  # 图片的宽高大于窗口宽高，可左右上下移动
-#             show_wh = [w2, h2]
-#             g_location_win[0] = location_win[0] + g_location_click[0] - g_location_release[0]
-#             g_location_win[1] = location_win[1] + g_location_click[1] - g_location_release[1]
-#         check_location([w1, h1], [w2, h2], g_location_win)  # 矫正窗口在图片中的位置
-#         g_image_show = g_image_zoom[g_location_win[1]:g_location_win[1] + show_wh[1], g_location_win[0]:g_location_win[0] + show_wh[0]]  # 实际显示的图片
-#
-#     elif event == cv2.EVENT_MOUSEWHEEL:  # 滚轮
-#         z = g_zoom  # 缩放前的缩放倍数，用于计算缩放后窗口在图片中的位置
-#         g_zoom = count_zoom(flags, g_step, g_zoom)  # 计算缩放倍数
-#         w1, h1 = [int(g_image_original.shape[1] * g_zoom), int(g_image_original.shape[0] * g_zoom)]  # 缩放图片的宽高
-#         w2, h2 = g_window_wh  # 窗口的宽高
-#         g_image_zoom = cv2.resize(g_image_original, (w1, h1), interpolation=cv2.INTER_AREA)  # 图片缩放
-#         show_wh = [w2, h2]  # 实际显示图片的宽高
-#         cv2.resizeWindow(g_window_name, w2, h2)
-#
-#         g_location_win = [int((g_location_win[0] + x) * g_zoom / z - x), int((g_location_win[1] + y) * g_zoom / z - y)]  # 缩放后，窗口在图片的位置
-#         check_location([w1, h1], [w2, h2], g_location_win)  # 矫正窗口在图片中的位置
-#         g_image_show = g_image_zoom[g_location_win[1]:g_location_win[1] + show_wh[1], g_location_win[0]:g_location_win[0] + show_wh[0]]  # 实际的显示图片
+
 
 
 def right_click(x, y):
@@ -760,11 +501,11 @@ def process_image_from_json(json_data):
     # Save the processed image
     cv2.imwrite("floodfill.png", g_image_zoom)
 
-
+contourn_points=[]
 
 def main(image_path, json_path):
     current_dir = os.path.dirname(__file__)
-    global g_image_zoom, g_image_original, mask_original, g_location_win
+    global g_image_zoom, g_image_original, mask_original, g_location_win,contourn_points
     # 构建相对于当前文件的路径
     # image_path = os.path.join(current_dir, image_path)
     # json_path= os.path.join(current_dir, json_path)
@@ -777,81 +518,109 @@ def main(image_path, json_path):
         json_data = json.load(f)
 
     # 调用 process_image_from_json 函数
-    process_image_from_json(json_data)
-    if g_image_original is None:
-        raise FileNotFoundError(f"Image at path {image_path} not found or could not be loaded.")
+    # process_image_from_json(json_data)
 
-    g_image_zoom = g_image_original.copy()  # 缩放后的图片
-    g_location_win = [0, 0]  # 相对于大图，窗口在图片中的位置
+    g_window_wh = [json_data['window']['width'], json_data['window']['height']]
+    g_location_win = [json_data['location']['win_x'], json_data['location']['win_y']]
+    g_zoom = json_data['zoom']
+    g_step = json_data['step']
 
-    g_image_show = g_image_original[g_location_win[1]:g_location_win[1] + g_window_wh[1],
-                   g_location_win[0]:g_location_win[0] + g_window_wh[0]]  # 实际显示的图片
+    process_image(json_data)
 
-    # 保存结果
-    cv2.imwrite('floodfill.png', g_image_zoom)
-
-    # 提取特定颜色像素点
-    mask = cv2.inRange(g_image_original, (255, 0, 0), (255, 0, 0))
-
-    # 将特定颜色像素点变为白色，其余像素点变为黑色
-    g_image_original[mask == 255] = [255, 255, 255]
-    g_image_original[mask != 255] = [0, 0, 0]
-
-    # 保存结果
-    cv2.imwrite('test.png', g_image_original)
-
-    image = cv2.imread("test.png")
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-
-    # 膨胀操作
-    kernel = np.ones((5, 5), np.uint8)
-    dilation = cv2.dilate(gray, kernel, iterations=1)
-    dilation = cv2.erode(dilation, kernel, iterations=1)
-
-    dilation_color = np.ones_like(image) * 255
-    dilation_color[dilation == 255] = [200, 150, 150]
-
-    cv2.imwrite('dilation.png', dilation)
-    cv2.imwrite('dilation_color.png', dilation_color)
-
-    image = cv2.imread("dilation.png")
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-
-    ret, image = cv2.threshold(gray, 127, 255, 0)
-
-    contour = find_contour_outline(image)
-    print("失真程度为0.002*周长以内的点结果")
-    for i in range(len(contour)):
-        print('[' + str(contour[i][0]) + ',' + str(contour[i][1]) + '],')
-    print(len(contour))
-    middle_part = contour[:-1]
-    n = 16
-    n %= len(middle_part)
-    contour = np.vstack([middle_part[n:], middle_part[:n]])
-    contour = np.vstack([contour, contour[0]])
-
-    points = [Point(lon, lat).__dict__ for lon, lat in contour]
-    points = points[:-1]
-    for point in points:
-        point['height'] = 100
-
-    json_data_example = {
-        "buildingArray": [
-            {
-                "name": "Building1",
-                "points": [],
-                "pointsOrder": "order",
-                "center": {"lon": 0, "lat": 0}
-            }
-        ]
-    }
-    json_data_example["buildingArray"][0]["points"] = points
-    print(json_data_example)
-
-
-    with open('outputtest.json', 'w') as outfile:
-        json.dump(json_data_example, outfile, cls=CustomEncoder)
-    read_data(json_data_example)
+    # click_location = json_data['right_click']
+    # image_path=json_data['image_path']
+    # g_image_original = cv2.imread(image_path)
+    # # g_image_original = cv2.imread(json_data['image_path'])
+    # g_image_zoom=g_image_original.copy()
+    # # g_image_zoom = cv2.resize(g_image_original, (int(g_image_original.shape[1] * g_zoom), int(g_image_original.shape[0] * g_zoom)), interpolation=cv2.INTER_AREA)
+    # g_image_show = g_image_zoom[g_location_win[1]:g_location_win[1] + g_window_wh[1], g_location_win[0]:g_location_win[0] + g_window_wh[0]]
+    # g_window_name = "contourImg"
+    #
+    # # Create the window before resizing it
+    # cv2.namedWindow(g_window_name, cv2.WINDOW_NORMAL)
+    # cv2.resizeWindow(g_window_name, g_window_wh[0], g_window_wh[1])
+    #
+    # # Call the right click function with parameters
+    # right_click(click_location["x"], click_location["y"])
+    # # Save the processed image
+    # cv2.imwrite("floodfill.png", g_image_zoom)
+    #
+    # if g_image_original is None:
+    #     raise FileNotFoundError(f"Image at path {image_path} not found or could not be loaded.")
+    #
+    # g_image_zoom = g_image_original.copy()  # 缩放后的图片
+    # g_location_win = [0, 0]  # 相对于大图，窗口在图片中的位置
+    #
+    # g_image_show = g_image_original[g_location_win[1]:g_location_win[1] + g_window_wh[1],
+    #                g_location_win[0]:g_location_win[0] + g_window_wh[0]]  # 实际显示的图片
+    #
+    # # 保存结果
+    # cv2.imwrite('floodfill.png', g_image_zoom)
+    #
+    # # 提取特定颜色像素点
+    # mask = cv2.inRange(g_image_original, (255, 0, 0), (255, 0, 0))
+    #
+    # # 将特定颜色像素点变为白色，其余像素点变为黑色
+    # g_image_original[mask == 255] = [255, 255, 255]
+    # g_image_original[mask != 255] = [0, 0, 0]
+    #
+    # # 保存结果
+    # cv2.imwrite('test.png', g_image_original)
+    #
+    # image = cv2.imread("test.png")
+    # gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    #
+    # # 膨胀操作
+    # kernel = np.ones((5, 5), np.uint8)
+    # dilation = cv2.dilate(gray, kernel, iterations=1)
+    # dilation = cv2.erode(dilation, kernel, iterations=1)
+    #
+    # dilation_color = np.ones_like(image) * 255
+    # dilation_color[dilation == 255] = [200, 150, 150]
+    #
+    # cv2.imwrite('dilation.png', dilation)
+    # cv2.imwrite('dilation_color.png', dilation_color)
+    #
+    # image = cv2.imread("dilation.png")
+    # gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    #
+    # ret, image = cv2.threshold(gray, 127, 255, 0)
+    #
+    # contour = find_contour_outline(image)
+    # print("失真程度为0.002*周长以内的点结果")
+    # for i in range(len(contour)):
+    #     print('[' + str(contour[i][0]) + ',' + str(contour[i][1]) + '],')
+    # print(len(contour))
+    # middle_part = contour[:-1]
+    # n = 16
+    # n %= len(middle_part)
+    # contour = np.vstack([middle_part[n:], middle_part[:n]])
+    # contour = np.vstack([contour, contour[0]])
+    #
+    # points = [Point(lon, lat).__dict__ for lon, lat in contour]
+    # points = points[:-1]
+    # for point in points:
+    #     point['height'] = 100
+    #
+    # contour_points=points
+    #
+    # json_data_example = {
+    #     "buildingArray": [
+    #         {
+    #             "name": "Building1",
+    #             "points": [],
+    #             "pointsOrder": "order",
+    #             "center": {"lon": 0, "lat": 0}
+    #         }
+    #     ]
+    # }
+    # json_data_example["buildingArray"][0]["points"] = points
+    # print(json_data_example)
+    #
+    #
+    # with open('outputtest.json', 'w') as outfile:
+    #     json.dump(json_data_example, outfile, cls=CustomEncoder)
+    # read_data(json_data_example)
     
 class CustomEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -859,12 +628,125 @@ class CustomEncoder(json.JSONEncoder):
             return int(obj)
         return super().default(obj)
 
-if __name__ == "__main__":
+def process_image(json_data):
+    contourn_points = {
+        "parent": {
+            "contour_points": [],
+            "height": 100
+        },
+        "children": []
+    }
+    global g_image_zoom, g_image_original, mask_original, g_location_win
+    click_locations = json_data['right_clicks']
+    image_path=json_data['image_path']
+    # g_image_original = cv2.imread(image_path)
+    g_image_original = cv2.imread(json_data['image_path'])
+    g_image_zoom=g_image_original.copy()
+    # g_image_zoom = cv2.resize(g_image_original, (int(g_image_original.shape[1] * g_zoom), int(g_image_original.shape[0] * g_zoom)), interpolation=cv2.INTER_AREA)
+    # g_image_show = g_image_zoom[g_location_win[1]:g_location_win[1] + g_window_wh[1], g_location_win[0]:g_location_win[0] + g_window_wh[0]]
+    g_window_name = "contourImg"
 
-    json_path = os.path.join("input.json")
-    with open(json_path, 'r') as f:
+    # Create the window before resizing it
+    cv2.namedWindow(g_window_name, cv2.WINDOW_NORMAL)
+    cv2.resizeWindow(g_window_name, g_window_wh[0], g_window_wh[1])
+    with open('newoutput2.json', 'w') as outfile:
+        json.dump(json_data, outfile, cls=CustomEncoder)
+
+    for click_location in click_locations:
+    # Call the right click function with parameters
+        right_click(click_location["x"], click_location["y"])
+        # Save the processed image
+        # cv2.imwrite("floodfill.png", g_image_zoom)
+
+        if g_image_original is None:
+            raise FileNotFoundError(f"Image at path {image_path} not found or could not be loaded.")
+
+        # g_image_zoom = g_image_original.copy()  # 缩放后的图片
+        g_location_win = [0, 0]  # 相对于大图，窗口在图片中的位置
+
+        g_image_show = g_image_original[g_location_win[1]:g_location_win[1] + g_window_wh[1],
+                       g_location_win[0]:g_location_win[0] + g_window_wh[0]]  # 实际显示的图片
+
+        # 保存结果
+        # cv2.imwrite('floodfill.png', g_image_zoom)
+
+        # 提取特定颜色像素点
+        mask = cv2.inRange(g_image_original, (255, 0, 0), (255, 0, 0))
+
+        # 将特定颜色像素点变为白色，其余像素点变为黑色
+        g_image_original[mask == 255] = [255, 255, 255]
+        g_image_original[mask != 255] = [0, 0, 0]
+
+        # 保存结果
+        cv2.imwrite('test.png', g_image_original)
+
+        image = cv2.imread("test.png")
+        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+        # 膨胀操作
+        kernel = np.ones((5, 5), np.uint8)
+        dilation = cv2.dilate(gray, kernel, iterations=1)
+        dilation = cv2.erode(dilation, kernel, iterations=1)
+
+        dilation_color = np.ones_like(image) * 255
+        dilation_color[dilation == 255] = [200, 150, 150]
+
+        cv2.imwrite('dilation.png', dilation)
+        # cv2.imwrite('dilation_color.png', dilation_color)
+
+        image = cv2.imread("dilation.png")
+        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+        ret, image = cv2.threshold(gray, 127, 255, 0)
+
+        contour = find_contour_outline(image)
+        print("失真程度为0.002*周长以内的点结果")
+        for i in range(len(contour)):
+            print('[' + str(contour[i][0]) + ',' + str(contour[i][1]) + '],')
+        print(len(contour))
+        middle_part = contour[:-1]
+        n = 16
+        n %= len(middle_part)
+        contour = np.vstack([middle_part[n:], middle_part[:n]])
+        contour = np.vstack([contour, contour[0]])
+
+        points = [Point(lon, lat).__dict__ for lon, lat in contour]
+        points = points[:-1]
+        for point in points:
+            point['height'] = 100
+
+        if click_location['type'] == 'parent':
+            contourn_points['parent']['contour_points'] = points
+
+        elif click_location['type'] == 'children':
+            contourn_points['children'].append({
+                'contour_points': points,
+                'height': 100
+            })
+    with open('newoutput2.json', 'w') as outfile:
+        json.dump(contourn_points, outfile, cls=CustomEncoder,indent=4)
+
+
+
+
+def process_children_parent_right_clicks(json_data):
+    for click in json_data['right_clicks']:
+        if click['type'] == 'parent':
+            right_click(click['x'], click['y'])
+        elif click['type'] == 'children':
+            right_click(click['x'], click['y'])
+
+if __name__ == "__main__":
+    
+    json_path = 'input2.json'
+    with open('input2.json', 'r') as f:
         json_data=json.load(f)
 
     image_path=json_data['image_path']
     main(image_path, json_path)
+      # 将 contourn_points 序列化并保存为 JSON 文件
+    with open('contourn_points.json', 'w') as outfile:
+        json.dump(contourn_points, outfile, cls=CustomEncoder)
+    
+    
 

@@ -1,9 +1,0 @@
-F:\CODE\GIThub\2DTO3D\photosprocess\target\debug\deps\libab_glyph_rasterizer-bafa1cad53dc1193.rmeta: F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\ab_glyph_rasterizer-0.1.8\src\lib.rs F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\ab_glyph_rasterizer-0.1.8\src\geometry.rs F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\ab_glyph_rasterizer-0.1.8\src\raster.rs
-
-F:\CODE\GIThub\2DTO3D\photosprocess\target\debug\deps\libab_glyph_rasterizer-bafa1cad53dc1193.rlib: F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\ab_glyph_rasterizer-0.1.8\src\lib.rs F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\ab_glyph_rasterizer-0.1.8\src\geometry.rs F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\ab_glyph_rasterizer-0.1.8\src\raster.rs
-
-F:\CODE\GIThub\2DTO3D\photosprocess\target\debug\deps\ab_glyph_rasterizer-bafa1cad53dc1193.d: F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\ab_glyph_rasterizer-0.1.8\src\lib.rs F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\ab_glyph_rasterizer-0.1.8\src\geometry.rs F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\ab_glyph_rasterizer-0.1.8\src\raster.rs
-
-F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\ab_glyph_rasterizer-0.1.8\src\lib.rs:
-F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\ab_glyph_rasterizer-0.1.8\src\geometry.rs:
-F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\ab_glyph_rasterizer-0.1.8\src\raster.rs:

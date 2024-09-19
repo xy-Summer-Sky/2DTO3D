@@ -40,3 +40,4 @@ out/
 *.pdb
 
 photosprocess/target/
+node_modules
