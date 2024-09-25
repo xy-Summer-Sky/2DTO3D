@@ -1,6 +1,8 @@
 mod UserModule;
 pub (crate) use self::UserModule::UserDao;// 私有模块，不对外公开
-pub mod CityDao;
+mod CityModule;
+pub (crate) use self::CityModule::CityDao;
 pub mod ModelDao;
 pub mod SvgDao;
-mod FileDao;
+mod FileModule;
+pub(crate)  use self::FileModule::FileDao;

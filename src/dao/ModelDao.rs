@@ -1,4 +1,4 @@
-use crate::entity::model::Model;
+use crate::models::entity::model::Model;
 use crate::pool::app_state::DbPool;
 use crate::schema::models;
 use diesel::prelude::*;

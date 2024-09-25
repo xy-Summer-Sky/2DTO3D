@@ -1,7 +1,9 @@
+use std::fs;
+use std::path::Path;
 use diesel::prelude::*;
 use crate::schema::users;
 use bcrypt;
-use crate::entity::user::{NewUser, User, UserLogin};
+use crate::models::entity::user::{NewUser, User, UserLogin};
 use crate::pool::app_state::DbPool;
 
 pub struct UserDao;
@@ -44,17 +46,20 @@ impl UserDao {
         diesel::delete(users::table.find(user_id)).execute(&mut conn)
     }
 
-    pub  fn verify_user(pool: &DbPool, identifier: &str, password: &str) -> bool {
+    pub  fn verify_user(session:actix_session::Session,pool: &DbPool, identifier: &str, password: &str) -> bool {
 
         let mut conn = pool.get().expect("Failed to get DB connection");
 
         if let Ok(user) = users::table
-            .select((users::username, users::email, users::password_hash))
+            .select((users::id,users::username, users::email, users::password_hash))
             .filter(users::username.eq(identifier).or(users::email.eq(identifier)))
             .first::<UserLogin>(&mut conn)
 
         {
-            bcrypt::verify(password, &user.password_hash).unwrap_or(false)
+            bcrypt::verify(password, &user.password_hash).unwrap_or(false);
+            let encrypted_user_id = bcrypt::hash(user.id.to_string(), bcrypt::DEFAULT_COST).unwrap();
+            session.insert("userid", encrypted_user_id).expect("Failed to insert userid into session");
+            true
 
         } else {
 
@@ -79,5 +84,18 @@ impl UserDao {
         }
 
         Ok(())
+    }
+
+    pub fn after_register_create_directory(pool: &DbPool, username: &str) -> QueryResult<usize> {
+        let user_directory = format!("data/{}", username);
+        let path = Path::new(&user_directory);
+        if !path.exists() {
+            fs::create_dir_all(path).expect("Failed to create user directory");
+        }
+
+        let mut conn = pool.get().expect("Failed to get DB connection");
+        diesel::update(users::table.filter(users::username.eq(username)))
+            .set(users::root_directory_path.eq(Some(user_directory)))
+            .execute(&mut conn)
     }
 }

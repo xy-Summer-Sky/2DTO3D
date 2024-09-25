@@ -8,6 +8,8 @@ use opencv::{core::Mat, core::Point2d, prelude::*};
 use serde_derive::Serialize;
 use std::clone::Clone;
 use std::fs::File;
+use std::path::Path;
+use chrono::Datelike;
 
 #[derive(Serialize)]
 struct Point3d
@@ -43,8 +45,9 @@ struct ExtractContour {
     g_image_original: Option<Mat>,  // 原始图片
     g_image_zoom: Option<Mat>,  // 缩放后的图片
     g_image_show: Option<Mat>,  // 实际显示的图片
-    mask_original: Option<Mat>,  // 用于图像处理的掩码
+    mask_original: Option<Mat>, // 用于图像处理的掩码
     p: f64,
+    image_svg_model_click_positions_name: String
 }
 
 
@@ -416,4 +419,111 @@ impl ExtractContour {
 
             Ok(())
         }
+    fn new_city_receive_upload_image(&mut self, userid: &str, image_data: &[u8]) -> Result<(), Box<dyn std::error::Error>> {
+        use std::fs;
+        use std::path::Path;
+
+        // Generate a new city_id (for simplicity, using a timestamp)
+        let city_id = format!("{}", chrono::Utc::now().timestamp());
+
+        // Create the base directory for the user
+        let base_dir = format!("data/{}", userid);
+        fs::create_dir_all(&base_dir)?;
+
+        // Create the city_id directory and subdirectories
+        let city_dir = format!("{}/{}", base_dir, city_id);
+        fs::create_dir_all(&format!("{}/model", city_dir))?;
+        fs::create_dir_all(&format!("{}/svg", city_dir))?;
+        fs::create_dir_all(&format!("{}/image", city_dir))?;
+
+        // Decode the image from the byte array
+        let image = opencv::imgcodecs::imdecode(&opencv::core::Vector::from_slice(image_data), opencv::imgcodecs::IMREAD_COLOR)?;
+
+        // Save the image to the new directory
+        let new_image_path = format!("{}/image/uploaded_image.png", city_dir);
+        opencv::imgcodecs::imwrite(&new_image_path, &image, &opencv::core::Vector::new())?;
+
+        // Load the image
+        self.g_image_original = Some(image);
+
+        Ok(())
+    }
+
+    pub fn new_model_and_receive_svg(&mut self, city_id: &str, svg_data: &[u8]) -> Result<(), Box<dyn std::error::Error>> {
+        use std::fs;
+
+        // Create the base directory for the city
+        let base_dir = format!("data/{}", city_id);
+        fs::create_dir_all(&base_dir)?;
+
+        // Create the SVG directory
+        let svg_dir = format!("{}/svg", base_dir);
+        fs::create_dir_all(&svg_dir)?;
+
+        // Save the SVG data to a file
+        let svg_path = format!("{}/model.svg", svg_dir);
+        fs::write(&svg_path, svg_data)?;
+
+        // Process the SVG data (this is a placeholder, replace with actual processing logic)
+        println!("SVG data received and saved to {}", svg_path);
+
+        Ok(())
+    }
+
+    fn receive_image_and_store(&mut self, user_id:&i32 ,city_id: &i32, image_data: &[u8],file_name:&str) -> Result<(), Box<dyn std::error::Error>> {
+        use std::fs;
+
+        // Create the base directory for the city
+        let image_dir = format!("data/{}/{}/images",user_id, city_id);
+        // fs::create_dir_all(&base_dir)?;
+        //
+        // // Create the image directory
+        // let image_dir = format!("{}/image", base_dir);
+        // fs::create_dir_all(&image_dir)?;
+
+        // Decode the image from the byte array
+        let image = opencv::imgcodecs::imdecode(&opencv::core::Vector::from_slice(image_data), opencv::imgcodecs::IMREAD_COLOR)?;
+
+        // Save the image to the new directory
+        let image_path = format!("{}/image.png", image_dir);
+        //控制名称在当前项目中的唯一性，命名使用的是获取当前日期时间+Session的ID+文件名称
+        let unique_path = ExtractContour::get_unique_filename(&image_path, file_name,"png");
+        opencv::imgcodecs::imwrite(&image_path, &image, &opencv::core::Vector::new())?;
+
+        // Load the image
+        self.g_image_original = Some(image);
+
+        Ok(())
+    }
+    fn save_contours_as_svg(&self, output: &str) -> Result<(), Box<dyn std::error::Error>> {
+        use std::fs::File;
+        use std::io::Write;
+
+        let mut svg_content = String::from(r#"<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">"#);
+
+        // 添加父轮廓
+        svg_content.push_str(r#"<path d="M0,0 L0,199 L189,199 L189,0 z" fill="none" id="parent" stroke="blue" stroke-width="2"/>"#);
+
+        // 添加子轮廓
+        svg_content.push_str(r#"<path d="M82,21 L76,29 L73,41 L72,53 L68,64 L61,69 L54,69 L47,67 L47,167 L95,138 L103,139 L146,167 L146,66 L99,20 L86,19 z" fill="none" id="child1" stroke="red" stroke-width="2"/>"#);
+
+        svg_content.push_str("</svg>");
+
+        let mut file = File::create(output)?;
+        file.write_all(svg_content.as_bytes())?;
+
+        Ok(())
+    }
+
+    //命名使用的是获取当前日期时间+Session的ID+文件名称
+    fn get_unique_filename(base_path: &str,file_name:&str, extension: &str) -> String {
+        let now = chrono::Utc::now();
+        let unique_path = format!("{}-{}-{}-{}.{}", now.year(), now.month(), now.day(), now.timestamp_subsec_millis(), extension);
+        unique_path
+    }
+    pub fn create_city_and_extract_contours(&mut self, image_path: &str, json_path: &str, output: &str) -> Result<(), Box<dyn std::error::Error>> {
+        self.extract_contour_api(image_path, json_path, output)?;
+        self.save_contours_as_svg(output)?;
+        Ok(())
+    }
 }

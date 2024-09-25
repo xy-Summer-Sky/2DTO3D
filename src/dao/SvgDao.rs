@@ -1,7 +1,7 @@
 // src/dao/SvgDao.rs
 use diesel::prelude::*;
 use crate::schema::svgs;
-use crate::entity::svg::Svg;
+use crate::models::entity::svg::Svg;
 use crate::pool::app_state::DbPool;
 
 pub struct SvgDao;

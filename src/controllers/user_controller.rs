@@ -3,7 +3,7 @@ use actix_web::{web, Error, Responder, HttpResponse, get, post};
 use actix_web::web::Path;
 use diesel::RunQueryDsl;
 use crate::dao::UserDao;
-use crate::entity::user::NewUser;
+use crate::models::entity::user::NewUser;
 use crate::pool::app_state::DbPool;
 use crate::schema::users;
 use crate::service::UserService;
@@ -94,12 +94,7 @@ pub async fn hello(db_pool: web::Data<DbPool>,path:Path<String>) -> impl Respond
     UserDao::create_user(&db_pool, &user).expect("TODO: panic message");
 
     UserService::register(&db_pool, &user.username, &user.password_hash).await.expect("TODO: panic message");
-    // tokio::task::spawn_blocking(move || {
-    //     diesel::insert_into(users::table)
-    //         .values(user)
-    //         .execute(&mut conn)
-    //
-    // }) .await.expect("Task panicked");
+
 
                                 HttpResponse::Ok().body("Hello world!")
 }

@@ -308,4 +308,6 @@ impl ModelGenerate {
             obj_file.write_all(obj_content.as_bytes()).expect("Unable to write data");
 
     }
+
+
 }

@@ -1,10 +1,10 @@
 // tests/user_controller_tests.rs
 use actix_web::{test, web, App};
-use async_trait::async_trait;
-use photosprocess::config::routes::config_user_routes; // 根据实际模块路径调整
+use photosprocess::config::routes::config_user_routes;
+// 根据实际模块路径调整
 use photosprocess::pool::app_state::DbPool;
 use rand::Rng;
-use photosprocess::controllers::user_controller::{hello, verify_user};
+
 #[actix_rt::test]
 async fn test_verify_user_route() {
     let pool = setup_test_db_pool().await; // 假设您有一��设置测试数据库连接池的函数
@@ -38,8 +38,8 @@ async fn test_register_user_route() {
     println!("Test /user/register route");
     // 测试 /user/register 路由
 
-    let username = rand::thread_rng().gen_range(1000..9999).to_string();; // 这里可以使用随机生成的用户名
-    let password = rand::thread_rng().gen_range(1000..9999).to_string();; // 这里可以使用随机生成的密码
+    let username = rand::thread_rng().gen_range(1000..9999).to_string(); // 这里可以使用随机生成的用户名
+    let password = rand::thread_rng().gen_range(1000..9999).to_string(); // 这里可以使用随机生成的密码
     let req = test::TestRequest::post()
         .uri(&format!("/user/register/{}/{}", username, password))
         .to_request();

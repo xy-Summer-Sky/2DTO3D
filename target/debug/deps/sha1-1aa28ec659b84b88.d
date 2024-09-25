@@ -1,0 +1,10 @@
+F:\CODE\GIThub\2DTO3D\target\debug\deps\libsha1-1aa28ec659b84b88.rmeta: F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\sha1-0.10.6\src\lib.rs F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\sha1-0.10.6\src\compress.rs F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\sha1-0.10.6\src\compress\soft.rs F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\sha1-0.10.6\src\compress\x86.rs
+
+F:\CODE\GIThub\2DTO3D\target\debug\deps\libsha1-1aa28ec659b84b88.rlib: F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\sha1-0.10.6\src\lib.rs F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\sha1-0.10.6\src\compress.rs F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\sha1-0.10.6\src\compress\soft.rs F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\sha1-0.10.6\src\compress\x86.rs
+
+F:\CODE\GIThub\2DTO3D\target\debug\deps\sha1-1aa28ec659b84b88.d: F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\sha1-0.10.6\src\lib.rs F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\sha1-0.10.6\src\compress.rs F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\sha1-0.10.6\src\compress\soft.rs F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\sha1-0.10.6\src\compress\x86.rs
+
+F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\sha1-0.10.6\src\lib.rs:
+F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\sha1-0.10.6\src\compress.rs:
+F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\sha1-0.10.6\src\compress\soft.rs:
+F:\DevelopmentKit\Rust\.cargo\registry\src\mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd\sha1-0.10.6\src\compress\x86.rs:

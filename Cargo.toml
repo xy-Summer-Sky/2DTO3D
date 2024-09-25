@@ -4,6 +4,8 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+r2d2 = { version = "0.8.10", default-features = true }
+r2d2_redis = { version = "0.14.0", default-features = true }
 actix-rt = "2.5.0"
 bcrypt = "0.15.1"
 itertools = "0.13.0"
@@ -49,6 +51,13 @@ geo="0.28.0"
 chrono = { version = "0.4.38", features = ["serde"] }
 async-trait = "0.1.82"
 rand = "0.8.5"
+actix-redis= { version = "0.13.1+deprecated", features = ["actix-web","default"] }
+actix-session = { version = "0.10.1", features = ["redis-session","redis-pool"] }
+redis= { version = "0.27.2", features = ["aio","async-std-comp"] }
+actix-service = "2.0.2"
+futures-core = "0.3.30"
+uuid = { version = "1.10.0", features = ["v4"] }
+
 [lib]
 name = "photosprocess"
 path = "src/lib.rs"

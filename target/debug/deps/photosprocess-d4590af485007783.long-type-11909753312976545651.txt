@@ -1,0 +1,1 @@
+fn(actix_web::web::Data<Pool<ConnectionManager<MysqlConnection>>>, actix_web::web::Path<u32>) -> impl futures_util::Future<Output = impl Responder> {extract_contour_api_dbpool}
