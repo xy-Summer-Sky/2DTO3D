@@ -1,11 +1,10 @@
 use crate::pool::app_state::AppState;
 use crate::service::{FileManager, SessionData};
-use actix_multipart::Multipart;
-use actix_web::{get, post, web, HttpRequest, HttpResponse, Responder};
-use futures_util::StreamExt;
+use actix_web::{get, post, web, HttpResponse, Responder};
 use r2d2::Pool;
+use std::ops::DerefMut;
+
 use r2d2_redis::RedisConnectionManager;
-use tokio::io::AsyncWriteExt;
 
 pub type RedisPool = Pool<RedisConnectionManager>;
 
@@ -15,8 +14,12 @@ pub fn config(cfg: &mut web::ServiceConfig) {
 }
 
 #[get("/new_city/{city_name}/{user_id}")]
-pub async fn new_city(app_state: web::Data<AppState>, path: web::Path<(String, i32)>) -> impl Responder {
+pub async fn new_city(
+    app_state: web::Data<AppState>,
+    path: web::Path<(String, i32)>,
+) -> impl Responder {
     let pool = &app_state.pool;
+    let redis_pool = &app_state.redis_pool;
     let (city_name, user_id) = path.into_inner();
     match FileManager::new_city_and_new_directory(&pool, &user_id, &city_name).await {
         Ok(_) => HttpResponse::Ok().body(format!("New city: {}", city_name)),
@@ -25,37 +28,30 @@ pub async fn new_city(app_state: web::Data<AppState>, path: web::Path<(String, i
 }
 
 #[post("/upload_image")]
-pub async fn upload_image(req: HttpRequest, mut payload: Multipart, app_state: web::Data<AppState>) -> impl Responder {
-    let mut redis_conn = app_state.redis_pool.get().unwrap();
-    let session_id_cookie = req.cookie("session_id");
-
-    if let Some(cookie) = session_id_cookie {
-        let session_id = cookie.value().to_string();
-        println!("Existing session id from cookie: {}", session_id);
-
-        match SessionData::get_session_data_by_id(&mut redis_conn, &session_id).await {
-            Ok(session_data) => {
-                println!("Session data: {}", session_data);
-
-                while let Some(item) = payload.next().await {
-                    let mut field = item.unwrap();
-                    let content_disposition = field.content_disposition().unwrap();
-                    let filename = content_disposition.get_filename().unwrap();
-
-                    let filepath = format!("./uploads/{}", sanitize_filename::sanitize(&filename));
-                    let mut f = web::block(|| std::fs::File::create(filepath)).await.unwrap();
-
-                    while let Some(chunk) = field.next().await {
-                        let data = chunk.unwrap();
-                        f = web::block(move || f.write_all(&data).map(|_| f)).await.unwrap();
-                    }
-                }
-
-                HttpResponse::Ok().body("File uploaded successfully")
-            }
-            Err(e) => HttpResponse::InternalServerError().body(format!("Failed to get session data: {}", e)),
-        }
-    } else {
-        HttpResponse::BadRequest().body("No session_id cookie found")
+pub async fn upload_image(
+    image_upload: crate::models::request_models_dto::ImageUpload,
+    app_state: web::Data<AppState>,
+) -> impl Responder {
+    //获取redis连接
+    let mut redis_conn_temp = app_state.redis_pool.get().await;
+    if let Err(e) = redis_conn_temp {
+        return HttpResponse::InternalServerError()
+            .body(format!("Failed to get Redis connection: {}", e));
     }
+    let mut redis_conn = redis_conn_temp.unwrap().deref_mut();
+
+    //获取session——id
+    let session_id = match image_upload.cookie.clone() {
+        Some(cookie) => cookie,
+        None => return HttpResponse::BadRequest().body("Missing session_id cookie"),
+    };
+    //利用redis解析session_id,获取session_data,目前不获取任何信息
+    let session_data = SessionData::get_session_data_by_id(redis_conn, &session_id).await;
+
+    //保存上传的图片
+    let city_id = image_upload.user_info.city_id.to_string();
+    let user_id = image_upload.user_info.user_id.to_string();
+    let file_content = image_upload.image;
+
+
 }

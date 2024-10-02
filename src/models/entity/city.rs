@@ -1,23 +1,22 @@
+use crate::schema::cities;
 // src/entity/city.rs
 use diesel::{Insertable, Queryable};
 use serde::{Deserialize, Serialize};
-use crate::schema::cities;
-#[derive(Insertable,Queryable, Serialize, Deserialize)]
+#[derive(Insertable, Queryable, Serialize, Deserialize)]
 #[diesel(table_name = cities)]
 pub struct City {
     pub id: i32,
     pub user_id: Option<i32>,
     pub city_name: String,
-    pub is_single_model: bool,
+    pub is_single_model: Option<bool>,
     pub model_path: Option<String>,
 }
 
-#[derive(Insertable,Queryable)]
+#[derive(Insertable, Queryable)]
 #[diesel(table_name = cities)]
-pub struct NewCity{
+pub struct NewCity {
     #[diesel(column_name = user_id)]
     pub user_id: Option<i32>,
     #[diesel(column_name = city_name)]
     pub city_name: String,
-
 }

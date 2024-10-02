@@ -1,3 +1,4 @@
+//! ![uml](ml.svg)
 // src/lib.rs
 pub mod controllers;
 
@@ -10,5 +11,6 @@ mod core_algorithm;
 pub mod schema;
 pub mod config;
 mod models;
+mod utils;
 
 

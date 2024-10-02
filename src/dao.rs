@@ -5,4 +5,7 @@ pub (crate) use self::CityModule::CityDao;
 pub mod ModelDao;
 pub mod SvgDao;
 mod FileModule;
+mod ImageModule;
+
+pub use self::ImageModule::ImageDao;
 pub(crate)  use self::FileModule::FileDao;

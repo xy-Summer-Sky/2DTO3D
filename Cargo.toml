@@ -2,8 +2,13 @@
 name = "photosprocess"
 version = "0.1.0"
 edition = "2021"
-
+build = "build.rs"
 [dependencies]
+syn="2.0.79"
+quote = "1.0.37"
+proc-macro2 = "1.0.86"
+bb8 = "0.8.5"
+bb8-redis = "0.17.0"
 r2d2 = { version = "0.8.10", default-features = true }
 r2d2_redis = { version = "0.14.0", default-features = true }
 actix-rt = "2.5.0"
@@ -53,10 +58,17 @@ async-trait = "0.1.82"
 rand = "0.8.5"
 actix-redis= { version = "0.13.1+deprecated", features = ["actix-web","default"] }
 actix-session = { version = "0.10.1", features = ["redis-session","redis-pool"] }
-redis= { version = "0.27.2", features = ["aio","async-std-comp"] }
+redis= { version = "0.27.2", features = ["aio","async-std-comp","connection-manager"] }
 actix-service = "2.0.2"
 futures-core = "0.3.30"
 uuid = { version = "1.10.0", features = ["v4"] }
+tokio-util = "0.7.11"
+bytes = "1.7.1"
+
+
+
+[build-dependencies.mml]
+version = "0.1.41"
 
 [lib]
 name = "photosprocess"

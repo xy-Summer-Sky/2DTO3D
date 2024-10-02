@@ -3,20 +3,19 @@ use diesel::r2d2::ConnectionManager;
 use dotenv::dotenv;
 use std::env;
 use diesel::r2d2::Pool;
-use r2d2_redis::RedisConnectionManager;
-use redis::Client as RedisClient;
+
 pub type DbPool = Pool<ConnectionManager<MysqlConnection>>;
-pub type RedisPool = Pool<RedisConnectionManager>;
+pub type RedisPool = bb8::Pool<bb8_redis::RedisConnectionManager>;
 #[derive(Clone)]
 pub struct AppState {
     pub pool: Pool<ConnectionManager<MysqlConnection>>,
     pub redis_pool: RedisPool,
 }
 impl AppState {
-    pub fn new() -> AppState {
+    pub async fn new() -> AppState {
         AppState {
             pool: establish_connection(),
-            redis_pool: establish_redis_pool(),
+            redis_pool: establish_redis_pool().await
         }
     }
 
@@ -34,13 +33,14 @@ pub fn establish_connection() -> DbPool {
 }
 
 
-pub fn establish_redis_pool() -> RedisPool {
+pub async fn establish_redis_pool() -> bb8::Pool<bb8_redis::RedisConnectionManager> {
     dotenv().ok();
     let redis_url = env::var("REDIS_URL").unwrap_or_else(|_| "redis://127.0.0.1:6379".to_string());
-    let manager = RedisConnectionManager::new(redis_url).expect("Failed to create Redis connection manager.");
-    Pool::builder()
+    let manager = bb8_redis::RedisConnectionManager::new(redis_url).expect("Failed to create Redis connection manager.");
+    bb8::Pool::builder()
         .max_size(20)
         .min_idle(Some(5))
         .build(manager)
+        .await
         .expect("Failed to create Redis pool.")
 }

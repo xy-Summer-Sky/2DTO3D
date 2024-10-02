@@ -8,7 +8,6 @@ use opencv::{core::Mat, core::Point2d, prelude::*};
 use serde_derive::Serialize;
 use std::clone::Clone;
 use std::fs::File;
-use std::path::Path;
 use chrono::Datelike;
 
 #[derive(Serialize)]
@@ -419,35 +418,6 @@ impl ExtractContour {
 
             Ok(())
         }
-    fn new_city_receive_upload_image(&mut self, userid: &str, image_data: &[u8]) -> Result<(), Box<dyn std::error::Error>> {
-        use std::fs;
-        use std::path::Path;
-
-        // Generate a new city_id (for simplicity, using a timestamp)
-        let city_id = format!("{}", chrono::Utc::now().timestamp());
-
-        // Create the base directory for the user
-        let base_dir = format!("data/{}", userid);
-        fs::create_dir_all(&base_dir)?;
-
-        // Create the city_id directory and subdirectories
-        let city_dir = format!("{}/{}", base_dir, city_id);
-        fs::create_dir_all(&format!("{}/model", city_dir))?;
-        fs::create_dir_all(&format!("{}/svg", city_dir))?;
-        fs::create_dir_all(&format!("{}/image", city_dir))?;
-
-        // Decode the image from the byte array
-        let image = opencv::imgcodecs::imdecode(&opencv::core::Vector::from_slice(image_data), opencv::imgcodecs::IMREAD_COLOR)?;
-
-        // Save the image to the new directory
-        let new_image_path = format!("{}/image/uploaded_image.png", city_dir);
-        opencv::imgcodecs::imwrite(&new_image_path, &image, &opencv::core::Vector::new())?;
-
-        // Load the image
-        self.g_image_original = Some(image);
-
-        Ok(())
-    }
 
     pub fn new_model_and_receive_svg(&mut self, city_id: &str, svg_data: &[u8]) -> Result<(), Box<dyn std::error::Error>> {
         use std::fs;
@@ -526,4 +496,9 @@ impl ExtractContour {
         self.save_contours_as_svg(output)?;
         Ok(())
     }
+
+
 }
+
+
+

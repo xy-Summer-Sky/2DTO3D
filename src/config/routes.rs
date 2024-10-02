@@ -10,4 +10,9 @@ pub fn config_user_routes(cfg: &mut web::ServiceConfig) {
         web::scope("/model")
             .configure(crate::controllers::model_controller::config)
     );
+
+    cfg.service(
+        web::scope("/upload")
+            .configure(crate::controllers::upload_controller::config)
+    );
 }
