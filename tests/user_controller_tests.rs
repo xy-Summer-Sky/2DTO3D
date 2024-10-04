@@ -8,13 +8,13 @@ use rand::Rng;
 #[actix_rt::test]
 async fn test_verify_user_route() {
     let app_state = AppState::new().await;
-    // let pool = setup_test_db_pool().await; // 假设您有一��设置测试数据库连接池的函数
+    let _ = env_logger::builder().is_test(true).try_init();
     let mut app = test::init_service(
         App::new()
-            .app_data(web::Data::new(app_state.clone()))
+            .app_data(actix_web::web::Data::new(app_state.clone()))
             .configure(config_user_routes),
     )
-    .await;
+        .await;
 
     println!("Test /user/verify route");
     // 测试 /user/verify 路由
@@ -31,36 +31,43 @@ async fn test_verify_user_route() {
 }
 #[actix_rt::test]
 async fn test_register_user_route() {
-    let pool = setup_test_db_pool().await; // 假设您有一个设置测试数据库连接池的函数
+    let app_state = AppState::new().await;
+    let _ = env_logger::builder().is_test(true).try_init();
     let mut app = test::init_service(
         App::new()
-            .app_data(web::Data::new(pool))
+            .app_data(actix_web::web::Data::new(app_state.clone()))
             .configure(config_user_routes),
     )
-    .await;
-
+        .await;
     println!("Test /user/register route");
     // 测试 /user/register 路由
 
     let username = rand::thread_rng().gen_range(1000..9999).to_string(); // 这里可以使用随机生成的用户名
     let password = rand::thread_rng().gen_range(1000..9999).to_string(); // 这里可以使用随机生成的密码
+    // let req = test::TestRequest::post()
+    //     .uri(&format!("/user/register/{}/{}", username, password))
+    //     .to_request();
     let req = test::TestRequest::post()
-        .uri(&format!("/user/register/{}/{}", username, password))
+        .uri("/user/register/sxy/sxy")
         .to_request();
     let resp = test::call_service(&mut app, req).await;
+    println!("Response status: {:?}", resp.status());
+    println!("Response body: {:?}", resp.response().body());
 
+    print!("{:?}", &resp.response().body());
     assert_eq!(resp.status(), 200); // 假设用户注册成功
 }
 
 #[actix_rt::test]
 async fn hello_test() {
-    let pool = setup_test_db_pool().await;
+    let app_state = AppState::new().await;
+    let _ = env_logger::builder().is_test(true).try_init();
     let mut app = test::init_service(
         App::new()
-            .app_data(web::Data::new(pool))
+            .app_data(actix_web::web::Data::new(app_state.clone()))
             .configure(config_user_routes),
     )
-    .await;
+        .await;
     let name = "test";
     let req = test::TestRequest::get()
         .uri(&format!("/user/hello/{}", name))
@@ -70,6 +77,6 @@ async fn hello_test() {
     assert_eq!(resp.status(), 200);
 }
 
-async fn setup_test_db_pool() -> DbPool {
-    photosprocess::pool::app_state::establish_connection()
-}
+// async fn setup_test_db_pool() -> DbPool {
+//     photosprocess::pool::app_state::establish_connection()
+// }

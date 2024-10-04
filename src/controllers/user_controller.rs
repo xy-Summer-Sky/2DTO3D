@@ -66,11 +66,12 @@ pub async fn verify_user(
 ///
 #[post("/register/{username}/{password}")]
 pub async fn register_user(
-    pool: web::Data<DbPool>,
+    app_state: web::Data<AppState>,
     path: Path<(String, String)>,
 ) -> Result<HttpResponse, Error> {
+    let db_pool = &app_state.pool;
     let (username, password) = path.into_inner();
-    let register_result = UserService::register(&pool, &username, &password).await;
+    let register_result = UserService::register(&db_pool, &username, &password).await;
     match register_result {
         Ok(user_id) => {
             Ok(HttpResponse::Ok()

@@ -3,11 +3,19 @@ use actix_web::{http::header, test, App};
 use photosprocess::controllers::upload_controller::config;
 use std::fs;
 use tokio_util::bytes::BytesMut;
+use photosprocess::config::routes::config_user_routes;
+use photosprocess::pool::app_state::AppState;
 
 #[actix_rt::test]
 async fn test_convert_video() {
-    let mut app = test::init_service(App::new().configure(config)).await;
-
+    let app_state = AppState::new().await;
+    let _ = env_logger::builder().is_test(true).try_init();
+    let mut app = test::init_service(
+        App::new()
+            .app_data(actix_web::web::Data::new(app_state.clone()))
+            .configure(config_user_routes),
+    )
+        .await;
     // 读取视频文件为二进制数据
     let video_data = fs::read("tmp/video.webm").expect("Failed to read video file");
 
@@ -23,7 +31,7 @@ async fn test_convert_video() {
 
     // 发送 POST 请求
     let req = test::TestRequest::post()
-        .uri("/convert")
+        .uri("/upload/convert")
         .insert_header((
             header::CONTENT_TYPE,
             header::HeaderValue::from_static("multipart/form-data; boundary=abc123"),

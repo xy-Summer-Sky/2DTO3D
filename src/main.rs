@@ -11,18 +11,14 @@ use svg::node::NodeClone;
 
 #[actix_rt::main]
 async fn main() -> actix_web::Result<()> {
-    let redis_url = match env::var("ENV") {
-        Ok(env) if env == "production" => env::var("REDIS_URL"),
-        _ => Ok("redis://127.0.0.1:6379".to_string()),
-    }
-    .unwrap();
+    let redis_url = "redis://:123456@8.222.253.40:6379".to_string();
     let redis_store = RedisSessionStore::new(redis_url).await.unwrap();
     let secret_key = Key::generate();
     let app_state = AppState::new().await;
     HttpServer::new(move || {
         App::new()
+
             .app_data(web::Data::new(app_state.clone()))
-            .wrap(Logger::default()) // 添加日志中间件
             .wrap(
                 Cors::default()
                     .allow_any_origin()
@@ -30,6 +26,7 @@ async fn main() -> actix_web::Result<()> {
                     .allow_any_header()
                     .max_age(3600),
             )
+            .wrap(Logger::default()) // 添加日志中间件
             .wrap(
                 SessionMiddleware::builder(redis_store.clone(), secret_key.clone())
                     .cookie_name("session_id".to_string())
