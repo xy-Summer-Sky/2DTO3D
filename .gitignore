@@ -38,6 +38,7 @@ out/
 
 *.zip
 *.pdb
+*.rlib
 
 photosprocess/target/
 node_modules
