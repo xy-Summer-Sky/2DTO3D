@@ -1,5 +1,5 @@
-use actix_web::{web, post, Error, HttpRequest, HttpResponse};
-use actix_web::web::{Payload};
+use actix_web::web::Payload;
+use actix_web::{post, web, Error, HttpRequest, HttpResponse};
 
 #[post("/convert")]
 async fn convert_video(req: HttpRequest, payload: Payload) -> Result<HttpResponse, Error> {

@@ -1,0 +1,1 @@
+futures_util::future::future::map::Map<Pin<Box<dyn futures_util::Future<Output = std::result::Result<actix_web::web::Json<ExtractContourRequestData>, actix_web::Error>>>>, {closure@src\models\request_models_dto\ModelProcess.rs:140:22: 140:30}>

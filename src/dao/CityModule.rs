@@ -7,7 +7,6 @@ use diesel::prelude::*;
 pub struct CityDao;
 
 impl CityDao {
-
     //生成新的城市模型记录，只用到了user_id和city_name——不涉及创建对应的模型目录
     //目录构建位于file_manager.rs
     pub fn create_city(pool: &DbPool, city: &NewCity) -> QueryResult<i32> {
@@ -56,6 +55,7 @@ impl CityDao {
         diesel::delete(cities::table.find(city_id)).execute(&mut conn)
     }
 
+    //构建新的city记录，返回最后插入的city——id
     pub fn create_city_with_model_path(
         pool: &DbPool,
         new_city: &NewCity,

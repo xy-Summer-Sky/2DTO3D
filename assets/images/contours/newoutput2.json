@@ -1,1 +1,109 @@
-{"window": {"width": 800, "height": 600}, "location": {"win_x": 0, "win_y": 0}, "right_clicks": [{"x": 23.9, "y": 136.8, "type": "parent"}, {"x": 94, "y": 95, "type": "children"}], "zoom": 1, "step": 0.1, "image_path": "4.png"}
+{
+    "parent": {
+        "contour_points": [
+            {
+                "lon": 0,
+                "lat": 0,
+                "height": 100
+            },
+            {
+                "lon": 0,
+                "lat": 199,
+                "height": 100
+            },
+            {
+                "lon": 189,
+                "lat": 199,
+                "height": 100
+            },
+            {
+                "lon": 189,
+                "lat": 0,
+                "height": 100
+            }
+        ],
+        "height": 100
+    },
+    "children": [
+        {
+            "contour_points": [
+                {
+                    "lon": 82,
+                    "lat": 21,
+                    "height": 100
+                },
+                {
+                    "lon": 76,
+                    "lat": 29,
+                    "height": 100
+                },
+                {
+                    "lon": 73,
+                    "lat": 41,
+                    "height": 100
+                },
+                {
+                    "lon": 72,
+                    "lat": 53,
+                    "height": 100
+                },
+                {
+                    "lon": 68,
+                    "lat": 64,
+                    "height": 100
+                },
+                {
+                    "lon": 61,
+                    "lat": 69,
+                    "height": 100
+                },
+                {
+                    "lon": 54,
+                    "lat": 69,
+                    "height": 100
+                },
+                {
+                    "lon": 47,
+                    "lat": 67,
+                    "height": 100
+                },
+                {
+                    "lon": 47,
+                    "lat": 167,
+                    "height": 100
+                },
+                {
+                    "lon": 95,
+                    "lat": 138,
+                    "height": 100
+                },
+                {
+                    "lon": 103,
+                    "lat": 139,
+                    "height": 100
+                },
+                {
+                    "lon": 146,
+                    "lat": 167,
+                    "height": 100
+                },
+                {
+                    "lon": 146,
+                    "lat": 66,
+                    "height": 100
+                },
+                {
+                    "lon": 99,
+                    "lat": 20,
+                    "height": 100
+                },
+                {
+                    "lon": 86,
+                    "lat": 19,
+                    "height": 100
+                }
+            ],
+            "height": 100
+        }
+    ]
+}

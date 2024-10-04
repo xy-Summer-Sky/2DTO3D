@@ -1,5 +1,7 @@
-use opencv::core::{in_range, MatTrait, Point,Scalar, Vector, BORDER_CONSTANT};
-use opencv::core::{CV_8U};
+use crate::models::request_models_dto::ExtractContourRequestData;
+use base64::Engine;
+use opencv::core::CV_8U;
+use opencv::core::{in_range, MatTrait, Point, Scalar, Vector, BORDER_CONSTANT};
 use opencv::highgui::{named_window, resize_window, WINDOW_NORMAL};
 use opencv::imgcodecs::{imencode, imread, imwrite, IMREAD_COLOR};
 use opencv::imgproc::flood_fill;
@@ -8,11 +10,9 @@ use opencv::{core::Mat, core::Point2d, prelude::*};
 use serde_derive::Serialize;
 use std::clone::Clone;
 use std::fs::File;
-use chrono::Datelike;
 
 #[derive(Serialize)]
-struct Point3d
-{
+struct Point3d {
     x: f64,
     y: f64,
     z: f64,
@@ -36,20 +36,18 @@ struct PolygonResult {
     convex: Vec<Point2d>,
     triangles: Vec<Triangle>,
 }
-struct ExtractContour {
-    g_window_wh: [f64; 2],  // 窗口宽高
-    g_location_win: [f64; 2],  // 相对于大图，窗口在图片中的位置
-    g_zoom: f64,  // 图片缩放比例
-    g_step: f64,  // 缩放系数
-    g_image_original: Option<Mat>,  // 原始图片
-    g_image_zoom: Option<Mat>,  // 缩放后的图片
-    g_image_show: Option<Mat>,  // 实际显示的图片
-    mask_original: Option<Mat>, // 用于图像处理的掩码
+pub struct ExtractContour {
+    g_window_wh: [f64; 2],         // 窗口宽高
+    g_location_win: [f64; 2],      // 相对于大图，窗口在图片中的位置
+    g_zoom: f64,                   // 图片缩放比例
+    g_step: f64,                   // 缩放系数
+    g_image_original: Option<Mat>, // 原始图片
+    g_image_zoom: Option<Mat>,     // 缩放后的图片
+    g_image_show: Option<Mat>,     // 实际显示的图片
+    mask_original: Option<Mat>,    // 用于图像处理的掩码
     p: f64,
-    image_svg_model_click_positions_name: String
+    image_svg_model_click_positions_name: String,
 }
-
-
 
 impl ExtractContour {
     fn check_point2d(&self, i: usize, p2: &Point2d, points: &[Point2d]) -> bool {
@@ -85,7 +83,13 @@ impl ExtractContour {
         }
     }
 
-    fn is_point2d_inside_triangle(&self, p0: &Point2d, p1: &Point2d, p2: &Point2d, p3: &Point2d) -> bool {
+    fn is_point2d_inside_triangle(
+        &self,
+        p0: &Point2d,
+        p1: &Point2d,
+        p2: &Point2d,
+        p3: &Point2d,
+    ) -> bool {
         fn sign(p1: &Point2d, p2: &Point2d, p3: &Point2d) -> f64 {
             (p1.x - p3.x) * (p2.y - p3.y) - (p2.x - p3.x) * (p1.y - p3.y)
         }
@@ -102,7 +106,7 @@ impl ExtractContour {
 
     fn cut_polygon(&mut self, points: &mut Vec<Point2d>) -> PolygonResult {
         let mut is_convex = true;
-        let mut convex_points: Vec<usize> = Vec::new();  // 凸点数组
+        let mut convex_points: Vec<usize> = Vec::new(); // 凸点数组
         for i in 1..=points.len() {
             let p2 = &points[i - 1];
 
@@ -144,7 +148,7 @@ impl ExtractContour {
                     p3_pos = 0;
                 } else {
                     p1 = points[Point2d - 2].clone();
-                    p2 =points[Point2d - 1].clone();
+                    p2 = points[Point2d - 1].clone();
                     p3 = points[Point2d].clone();
                     p1_pos = Point2d as isize - 2;
                     p2_pos = Point2d as isize - 1;
@@ -178,7 +182,7 @@ impl ExtractContour {
 
         result
     }
-    fn find_pos(&self,substring: &str, vcontent: &str) -> isize {
+    fn find_pos(&self, substring: &str, vcontent: &str) -> isize {
         let v_arr: Vec<&str> = vcontent.split("\nv ").collect();
         for (i, v_item) in v_arr.iter().enumerate() {
             if substring == *v_item {
@@ -189,15 +193,25 @@ impl ExtractContour {
     }
 
     fn find_contour_outline(&self, image: &Mat) -> Vec<Point> {
-        use opencv::imgproc::{approx_poly_dp, arc_length, contour_area, find_contours};
         use opencv::core::{Vector, VectorToVec};
+        use opencv::imgproc::{approx_poly_dp, arc_length, contour_area, find_contours};
 
         // 找到二值图像的轮廓和层级结构
-        let mut contours:Vector<Vector<Point>> = Vector::new();
+        let mut contours: Vector<Vector<Point>> = Vector::new();
         find_contours(image, &mut contours, 3, 2, Point::new(0, 0)).unwrap();
 
         // 找到图像最外层轮廓的索引
-        let max_contour_idx = contours.iter().enumerate().max_by(|(_, a), (_, b)| contour_area(a, false).unwrap().partial_cmp(&contour_area(b, false).unwrap()).unwrap()).map(|(i, _)| i).unwrap();
+        let max_contour_idx = contours
+            .iter()
+            .enumerate()
+            .max_by(|(_, a), (_, b)| {
+                contour_area(a, false)
+                    .unwrap()
+                    .partial_cmp(&contour_area(b, false).unwrap())
+                    .unwrap()
+            })
+            .map(|(i, _)| i)
+            .unwrap();
 
         // 获取最外层轮廓的点集
         let contour: Vector<Point> = contours.get(max_contour_idx).unwrap();
@@ -207,7 +221,7 @@ impl ExtractContour {
         // 根据轮廓面积降采样点集，保证点数量最少
         let perimeter = arc_length(&contour, true).unwrap();
         let epsilon = 0.002 * perimeter;
-        let mut approx:Vector<Point>= Vector::new();
+        let mut approx: Vector<Point> = Vector::new();
         approx_poly_dp(&contour, &mut approx, epsilon, true).unwrap();
 
         // 将点集按顺序连接成封闭轮廓
@@ -217,33 +231,42 @@ impl ExtractContour {
         contour_points
     }
 
-    fn right_click(&mut self,x: f64, y: f64) -> Result<(), opencv::Error> {
+    fn right_click(&mut self, x: f64, y: f64) -> Result<(), opencv::Error> {
         use opencv::core::{Mat, Rect, Scalar};
         if let Some(ref mut g_image_zoom) = self.g_image_zoom {
             let (g_original_h, g_original_w) = (g_image_zoom.rows(), g_image_zoom.cols());
             let mask = Mat::zeros(g_original_h + 2, g_original_w + 2, CV_8U)?;
             let mut roi = Rect::new(150, 150, 100, 100); // x, y, width, height
-            let mut sub_mat: Mat = mask.roi(roi).unwrap().to_mat()?;
-            sub_mat.set_to(&Scalar::from(0.0), &Mat::default())?;
+            // let mut sub_mat: Mat = mask.roi(roi).unwrap().to_mat()?;
+            // sub_mat.set_to(&Scalar::from(0.0), &Mat::default())?;
             flood_fill(
                 g_image_zoom,
-                opencv::core::Point::new((self.g_location_win[0] + x) as i32, (self.g_location_win[1] + y) as i32),
+                opencv::core::Point::new(
+                    (self.g_location_win[0] + x) as i32,
+                    (self.g_location_win[1] + y) as i32,
+                ),
                 Scalar::new(255.0, 0.0, 0.0, 0.0),
                 &mut roi,
                 Scalar::new(30.0, 30.0, 30.0, 0.0),
                 Scalar::new(30.0, 30.0, 30.0, 0.0),
-                FLOODFILL_FIXED_RANGE
+                FLOODFILL_FIXED_RANGE,
             )?;
 
-            let scale = g_image_zoom.cols() as f64 / self.g_image_original.as_ref().unwrap().cols() as f64;
+            let scale =
+                g_image_zoom.cols() as f64 / self.g_image_original.as_ref().unwrap().cols() as f64;
             let original_x = (self.g_location_win[0] + x) / scale;
             let original_y = (self.g_location_win[1] + y) / scale;
 
             let mut min_dist = f64::INFINITY;
             let mut nearest_point = Point::new(0, 0);
-            for i in 0.max((original_x.floor() as i32) - 1)..((original_x.ceil() as i32) + 1).min(g_image_zoom.cols()) {
-                for j in 0.max((original_y.floor() as i32) - 1)..((original_y.ceil() as i32) + 1).min(g_image_zoom.rows()) {
-                    let dist = ((original_x - i as f64).powi(2) + (original_y - j as f64).powi(2)).sqrt();
+            for i in 0.max((original_x.floor() as i32) - 1)
+                ..((original_x.ceil() as i32) + 1).min(g_image_zoom.cols())
+            {
+                for j in 0.max((original_y.floor() as i32) - 1)
+                    ..((original_y.ceil() as i32) + 1).min(g_image_zoom.rows())
+                {
+                    let dist =
+                        ((original_x - i as f64).powi(2) + (original_y - j as f64).powi(2)).sqrt();
                     if dist < min_dist {
                         min_dist = dist;
                         nearest_point = Point::new(i, j);
@@ -251,10 +274,21 @@ impl ExtractContour {
                 }
             }
 
-            self.mask_original = Mat::zeros(self.g_image_original.as_ref().unwrap().rows() + 2, self.g_image_original.as_ref().unwrap().cols() + 2, CV_8U)?.to_mat().ok();
+            self.mask_original = Mat::zeros(
+                self.g_image_original.as_ref().unwrap().rows() + 2,
+                self.g_image_original.as_ref().unwrap().cols() + 2,
+                CV_8U,
+            )?
+            .to_mat()
+            .ok();
             // 进行其他操作，例如使用 set_to 方法
-            sub_mat.set_to(&Scalar::all(0.0), &Mat::default())?;
-            let mut rect = Rect::new(0, 0, self.g_image_original.as_ref().unwrap().cols() + 2, self.g_image_original.as_ref().unwrap().rows() + 2);
+            // sub_mat.set_to(&Scalar::all(0.0), &Mat::default())?;
+            let mut rect = Rect::new(
+                0,
+                0,
+                self.g_image_original.as_ref().unwrap().cols() + 2,
+                self.g_image_original.as_ref().unwrap().rows() + 2,
+            );
             flood_fill(
                 self.g_image_original.as_mut().unwrap(),
                 nearest_point,
@@ -262,7 +296,7 @@ impl ExtractContour {
                 &mut rect,
                 Scalar::new(30.0, 30.0, 30.0, 0.0),
                 Scalar::new(30.0, 30.0, 30.0, 0.0),
-                FLOODFILL_FIXED_RANGE
+                FLOODFILL_FIXED_RANGE,
             )?;
         } else {
             println!("g_image_zoom is None");
@@ -271,55 +305,50 @@ impl ExtractContour {
         Ok(())
     }
 
-
-    fn process_image(&mut self, json_data: &serde_json::Value,output_path: &str) -> Result<(), Box<dyn std::error::Error>> {
-
+    fn process_image(
+        &mut self,
+        json_data: &serde_json::Value,
+    ) -> Result<serde_json::Value, Box<dyn std::error::Error>> {
         use opencv::core::MatTrait;
         let mut contourn_points = serde_json::json!({
-        "parent": {
-            "contour_Point2ds": [],
-            "height": 100
-        },
-        "children": []
-    });
+            "contours": []
+        });
 
         let mut g_location_win: [i32; 2] = [0, 0];
 
         let click_locations = json_data["right_clicks"].as_array().unwrap();
-        let image_path = json_data["image_path"].as_str().unwrap();
-        self.g_image_original = Some(imread(image_path, IMREAD_COLOR)?);
+        // let image_path = json_data["image_path"].as_str().unwrap();
+        // self.g_image_original = Some(opencv::imgcodecs::imdecode(&opencv::core::Vector::from(image_data), IMREAD_COLOR)?);
         self.g_image_zoom = self.g_image_original.clone();
 
-        let g_window_name = "contourImg";
-        named_window(g_window_name, WINDOW_NORMAL)?;
-        resize_window(g_window_name, self.g_window_wh[0] as i32, self.g_window_wh[1] as i32)?;
+        // let g_window_name = "contourImg";
+        // named_window(g_window_name, WINDOW_NORMAL)?;
+        // resize_window(
+        //     g_window_name,
+        //     self.g_window_wh[0] as i32,
+        //     self.g_window_wh[1] as i32,
+        // )?;
 
         let file = File::create("newoutput2.json")?;
         serde_json::to_writer(&file, &json_data)?;
 
         for click_location in click_locations {
             self.right_click(
-                click_location["x"].as_f64().unwrap() ,
-                click_location["y"].as_f64().unwrap() ,
+                click_location["x"].as_f64().unwrap(),
+                click_location["y"].as_f64().unwrap(),
             )?;
 
-            if self.g_image_original.as_ref().unwrap().empty() {
-                return Err(Box::new(std::io::Error::new(
-                    std::io::ErrorKind::NotFound,
-                    format!("Image at path {} not found or could not be loaded.", image_path),
-                )));
-            }
+            // if self.g_image_original.as_ref().unwrap().empty() {
+            //     return Err(Box::new(std::io::Error::new(
+            //         std::io::ErrorKind::NotFound,
+            //         format!(
+            //             "Image at path {} not found or could not be loaded.",
+            //             image_path
+            //         ),
+            //     )));
+            // }
 
             g_location_win = [0.0 as i32, 0.0 as i32];
-            // let roi_image = self.g_image_original.as_ref().unwrap()
-            //     .roi(Rect::new(
-            //         g_location_win[0],
-            //         g_location_win[1],
-            //         self.g_window_wh[0] as i32,
-            //         self.g_window_wh[1] as i32,
-            //     ))?.to_mat().unwrap(); // 确保你的 `opencv` 版本支持 `to_mat`
-            //
-            // self.g_image_show = Some(roi_image);
 
             let g_image_original = self.g_image_original.as_mut().unwrap();
             let mut mask = Mat::default();
@@ -330,29 +359,44 @@ impl ExtractContour {
                 &mut mask,
             )?;
 
-                g_image_original.set_to(&Scalar::new(255.0, 255.0, 255.0, 0.0), &mask)?;
-                let mut inverted_mask = Mat::default();
-                opencv::core::bitwise_not(&mask, &mut inverted_mask, &Mat::default())?;
-                g_image_original.set_to(&Scalar::new(0.0, 0.0, 0.0, 0.0), &inverted_mask)?;
+            g_image_original.set_to(&Scalar::new(255.0, 255.0, 255.0, 0.0), &mask)?;
+            let mut inverted_mask = Mat::default();
+            opencv::core::bitwise_not(&mask, &mut inverted_mask, &Mat::default())?;
+            g_image_original.set_to(&Scalar::new(0.0, 0.0, 0.0, 0.0), &inverted_mask)?;
 
             let mut buf = Vector::new();
-            imencode(".png", &self.g_image_original.as_ref().unwrap(), &mut buf, &Vector::new())?;
+            imencode(
+                ".png",
+                &self.g_image_original.as_ref().unwrap(),
+                &mut buf,
+                &Vector::new(),
+            )?;
             let image = opencv::imgcodecs::imdecode(&buf, IMREAD_COLOR)?;
             let mut gray = Mat::default();
             cvt_color(&image, &mut gray, COLOR_BGR2GRAY, 0)?;
-
-            // let kernel = Mat::ones(5, 5, CV_8U)?;
-            //
-            // let mut dilation = Mat::default();
-            // dilate(&gray, &mut dilation, &kernel, Point::new(-1 , -1), 1, BORDER_CONSTANT, Scalar::default())?;
-            // erode(&dilation, &mut dilation, &kernel, Point::new(-1, -1), 1, BORDER_CONSTANT, Scalar::default())?;
             let kernel = Mat::ones(5, 5, CV_8U)?;
             let mut dilation = Mat::default();
             {
                 let gray_ref = &gray;
-                dilate(gray_ref, &mut dilation, &kernel, Point::new(-1, -1), 1, BORDER_CONSTANT, Scalar::default())?;
-                let mut temp_image = dilation.clone();  // 创建一个临时副本
-                erode(&dilation, &mut temp_image, &kernel, Point::new(-1, -1), 1, BORDER_CONSTANT, Scalar::default())?;
+                dilate(
+                    gray_ref,
+                    &mut dilation,
+                    &kernel,
+                    Point::new(-1, -1),
+                    1,
+                    BORDER_CONSTANT,
+                    Scalar::default(),
+                )?;
+                let mut temp_image = dilation.clone(); // 创建一个临时副本
+                erode(
+                    &dilation,
+                    &mut temp_image,
+                    &kernel,
+                    Point::new(-1, -1),
+                    1,
+                    BORDER_CONSTANT,
+                    Scalar::default(),
+                )?;
                 dilation = temp_image;
             }
 
@@ -365,7 +409,7 @@ impl ExtractContour {
             let mut image = Mat::default();
             threshold(&gray, &mut image, 127.0, 255.0, THRESH_BINARY)?;
 
-            let contour:Vec<opencv::core::Point>= self.find_contour_outline(&image);
+            let contour: Vec<opencv::core::Point> = self.find_contour_outline(&image);
             println!("失真程度为0.002*周长以内的点结果");
             for Point in &contour {
                 println!("[{}, {}],", Point.x, Point.y);
@@ -377,128 +421,149 @@ impl ExtractContour {
             let contour = [&middle_part[n..], &middle_part[..n]].concat();
             let contour: Vec<opencv::core::Point> = [&contour[..], &vec![contour[0]]].concat();
 
-            let mut points: Vec<Point3d> = contour.iter().map(|p:&opencv::core::Point| Point3d { x: p.x as f64, y: p.y as f64, z: 0.0 }).collect();
+            let mut points: Vec<Point3d> = contour
+                .iter()
+                .map(|p: &opencv::core::Point| Point3d {
+                    x: p.x as f64,
+                    y: p.y as f64,
+                    z: 0.0,
+                })
+                .collect();
             points.pop();
             for Point2d in &mut points {
                 Point2d.z = 100.0;
             }
 
-            if click_location["type"] == "parent" {
-                contourn_points["parent"]["contour_Points"] = serde_json::to_value(&points)?;
-            } else if click_location["type"] == "children" {
-                contourn_points["children"].as_array_mut().unwrap().push(serde_json::json!({
-                "contour_Points": points,
-                "height": 100
-            }));
-            }
+            // if click_location["type"] == "parent" {
+            //     contourn_points["parent"]["contour_Points"] = serde_json::to_value(&points)?;
+            // } else if click_location["type"] == "children" {
+            //     contourn_points["children"]
+            //         .as_array_mut()
+            //         .unwrap()
+            //         .push(serde_json::json!({
+            //             "contour_Points": points,
+            //             "height": 100
+            //         }));
+            // }
+            contourn_points["contours"]
+                .as_array_mut()
+                .unwrap()
+                .push(serde_json::json!({
+                    "contour_points": points,
+                    "height": 100
+                }));
         }
 
-        let file = File::create(output_path)?;
-        serde_json::to_writer_pretty(&file, &contourn_points)?;
+        // let file = File::create(output_path)?;
+        // serde_json::to_writer_pretty(&file, &contourn_points)?;
 
-        Ok(())
+        Ok(contourn_points)
     }
 
-    pub fn extract_contour_api(&mut self,image_path: &str, json_path: &str,output:&str) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn extract_contour_api(
+        &mut self,
+        image_data: &ExtractContourRequestData,
+    ) -> Result<serde_json::Value, Box<dyn std::error::Error>> {
         std::env::current_dir()?;
 
-            self.g_location_win= [0.0, 0.0];
-            self.g_window_wh = [800.0, 600.0];  // 窗口宽高
-            self.g_zoom = 1.0;
-            self.g_step = 0.1;
-            self.g_image_original = Some(imread(image_path, IMREAD_COLOR)?);
-            let file = File::open(json_path)?;
-            let json_data: serde_json::Value = serde_json::from_reader(file)?;
-            self.g_location_win = [
-                json_data["location"]["win_x"].as_f64().unwrap() ,
-                json_data["location"]["win_y"].as_f64().unwrap() ,
-            ];
+        // self.g_location_win = [0.0, 0.0];
+        // self.g_window_wh = [800.0, 600.0]; // 窗口宽高
+        // self.g_zoom = 1.0;
+        // self.g_step = 0.1;
+        self.g_image_original = Some(opencv::imgcodecs::imdecode(
+            &opencv::core::Vector::<u8>::from(
+                base64::engine::general_purpose::STANDARD.decode(&image_data.image_data)?,
+            ),
+            IMREAD_COLOR,
+        )?);
+        // let file = File::open(json_path)?;
+        let json_data = serde_json::to_value(&image_data)?;
+        // self.g_location_win = [0.0, 0.0];
 
-            self.process_image(&json_data,output)?;
-
-            Ok(())
+        Ok(self.process_image(&json_data)?)
+    }
+    pub fn new() -> Self {
+        ExtractContour {
+            g_window_wh: [800.0, 600.0],
+            g_location_win: [0.0, 0.0],
+            g_zoom: 1.0,
+            g_step: 0.1,
+            g_image_original: None,
+            g_image_zoom: None,
+            g_image_show: None,
+            mask_original: None,
+            p: 0.0,
+            image_svg_model_click_positions_name: String::new(),
         }
-
-    pub fn new_model_and_receive_svg(&mut self, city_id: &str, svg_data: &[u8]) -> Result<(), Box<dyn std::error::Error>> {
-        use std::fs;
-
-        // Create the base directory for the city
-        let base_dir = format!("data/{}", city_id);
-        fs::create_dir_all(&base_dir)?;
-
-        // Create the SVG directory
-        let svg_dir = format!("{}/svg", base_dir);
-        fs::create_dir_all(&svg_dir)?;
-
-        // Save the SVG data to a file
-        let svg_path = format!("{}/model.svg", svg_dir);
-        fs::write(&svg_path, svg_data)?;
-
-        // Process the SVG data (this is a placeholder, replace with actual processing logic)
-        println!("SVG data received and saved to {}", svg_path);
-
-        Ok(())
     }
 
-    fn receive_image_and_store(&mut self, user_id:&i32 ,city_id: &i32, image_data: &[u8],file_name:&str) -> Result<(), Box<dyn std::error::Error>> {
-        use std::fs;
+    // pub fn new_model_and_receive_svg(
+    //     &mut self,
+    //     city_id: &str,
+    //     svg_data: &[u8],
+    // ) -> Result<(), Box<dyn std::error::Error>> {
+    //     use std::fs;
+    //
+    //     // Create the base directory for the city
+    //     let base_dir = format!("data/{}", city_id);
+    //     fs::create_dir_all(&base_dir)?;
+    //
+    //     // Create the SVG directory
+    //     let svg_dir = format!("{}/svg", base_dir);
+    //     fs::create_dir_all(&svg_dir)?;
+    //
+    //     // Save the SVG data to a file
+    //     let svg_path = format!("{}/model.svg", svg_dir);
+    //     fs::write(&svg_path, svg_data)?;
+    //
+    //     // Process the SVG data (this is a placeholder, replace with actual processing logic)
+    //     println!("SVG data received and saved to {}", svg_path);
+    //
+    //     Ok(())
+    // }
 
-        // Create the base directory for the city
-        let image_dir = format!("data/{}/{}/images",user_id, city_id);
-        // fs::create_dir_all(&base_dir)?;
-        //
-        // // Create the image directory
-        // let image_dir = format!("{}/image", base_dir);
-        // fs::create_dir_all(&image_dir)?;
+    // fn save_contours_as_svg(&self, output: &str) -> Result<(), Box<dyn std::error::Error>> {
+    //     use std::fs::File;
+    //     use std::io::Write;
+    //
+    //     let mut svg_content =
+    //         String::from(r#"<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">"#);
+    //
+    //     // 添加父轮廓
+    //     svg_content.push_str(r#"<path d="M0,0 L0,199 L189,199 L189,0 z" fill="none" id="parent" stroke="blue" stroke-width="2"/>"#);
+    //
+    //     // 添加子轮廓
+    //     svg_content.push_str(r#"<path d="M82,21 L76,29 L73,41 L72,53 L68,64 L61,69 L54,69 L47,67 L47,167 L95,138 L103,139 L146,167 L146,66 L99,20 L86,19 z" fill="none" id="child1" stroke="red" stroke-width="2"/>"#);
+    //
+    //     svg_content.push_str("</svg>");
+    //
+    //     let mut file = File::create(output)?;
+    //     file.write_all(svg_content.as_bytes())?;
+    //
+    //     Ok(())
+    // }
 
-        // Decode the image from the byte array
-        let image = opencv::imgcodecs::imdecode(&opencv::core::Vector::from_slice(image_data), opencv::imgcodecs::IMREAD_COLOR)?;
-
-        // Save the image to the new directory
-        let image_path = format!("{}/image.png", image_dir);
-        //控制名称在当前项目中的唯一性，命名使用的是获取当前日期时间+Session的ID+文件名称
-        let unique_path = ExtractContour::get_unique_filename(&image_path, file_name,"png");
-        opencv::imgcodecs::imwrite(&image_path, &image, &opencv::core::Vector::new())?;
-
-        // Load the image
-        self.g_image_original = Some(image);
-
-        Ok(())
-    }
-    fn save_contours_as_svg(&self, output: &str) -> Result<(), Box<dyn std::error::Error>> {
-        use std::fs::File;
-        use std::io::Write;
-
-        let mut svg_content = String::from(r#"<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">"#);
-
-        // 添加父轮廓
-        svg_content.push_str(r#"<path d="M0,0 L0,199 L189,199 L189,0 z" fill="none" id="parent" stroke="blue" stroke-width="2"/>"#);
-
-        // 添加子轮廓
-        svg_content.push_str(r#"<path d="M82,21 L76,29 L73,41 L72,53 L68,64 L61,69 L54,69 L47,67 L47,167 L95,138 L103,139 L146,167 L146,66 L99,20 L86,19 z" fill="none" id="child1" stroke="red" stroke-width="2"/>"#);
-
-        svg_content.push_str("</svg>");
-
-        let mut file = File::create(output)?;
-        file.write_all(svg_content.as_bytes())?;
-
-        Ok(())
-    }
-
-    //命名使用的是获取当前日期时间+Session的ID+文件名称
-    fn get_unique_filename(base_path: &str,file_name:&str, extension: &str) -> String {
-        let now = chrono::Utc::now();
-        let unique_path = format!("{}-{}-{}-{}.{}", now.year(), now.month(), now.day(), now.timestamp_subsec_millis(), extension);
-        unique_path
-    }
-    pub fn create_city_and_extract_contours(&mut self, image_path: &str, json_path: &str, output: &str) -> Result<(), Box<dyn std::error::Error>> {
-        self.extract_contour_api(image_path, json_path, output)?;
-        self.save_contours_as_svg(output)?;
-        Ok(())
-    }
-
-
+    // //命名使用的是获取当前日期时间+Session的ID+文件名称
+    // fn get_unique_filename(base_path: &str, file_name: &str, extension: &str) -> String {
+    //     let now = chrono::Utc::now();
+    //     let unique_path = format!(
+    //         "{}-{}-{}-{}.{}",
+    //         now.year(),
+    //         now.month(),
+    //         now.day(),
+    //         now.timestamp_subsec_millis(),
+    //         extension
+    //     );
+    //     unique_path
+    // }
+    // pub fn create_city_and_extract_contours(
+    //     &mut self,
+    //     image_data: ExtractContourRequestData,
+    //     // json_path: &str,
+    //     output: &str,
+    // ) -> Result<(), Box<dyn std::error::Error>> {
+    //     self.extract_contour_api(image_data,  output)?;
+    //     self.save_contours_as_svg(output)?;
+    //     Ok(())
+    // }
 }
-
-
-

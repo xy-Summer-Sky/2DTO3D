@@ -1,4 +1,4 @@
-﻿// @generated automatically by Diesel CLI.
+// @generated automatically by Diesel CLI.
 
 diesel::table! {
     /// Representation of the `cities` table.
@@ -283,11 +283,4 @@ diesel::joinable!(cities -> users (user_id));
 diesel::joinable!(models -> cities (city_id));
 diesel::joinable!(svgs -> cities (city_id));
 
-diesel::allow_tables_to_appear_in_same_query!(
-    cities,
-    files,
-    images,
-    models,
-    svgs,
-    users,
-);
+diesel::allow_tables_to_appear_in_same_query!(cities, files, images, models, svgs, users,);

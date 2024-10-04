@@ -45,7 +45,15 @@ impl SessionData {
         redis_pool: &RedisPool,
     ) -> Result<String, Error> {
         let session_id_cookie = req.cookie("session_id");
-        let mut redis_conn_temp = redis_pool.get().await.unwrap();
+        println!("Attempting to get a Redis connection from the pool...");
+        let mut redis_conn_temp = match redis_pool.get().await {
+            Ok(conn) => conn,
+            Err(e) => {
+                println!("Failed to get Redis connection: {}", e);
+                return Err(actix_web::error::ErrorInternalServerError("Failed to get Redis connection"));
+            }
+        };
+        println!("Successfully obtained a Redis connection.");
         let redis_conn = redis_conn_temp.deref_mut();
         if let Some(cookie) = session_id_cookie {
             let session_id = cookie.value().to_string();

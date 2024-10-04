@@ -21,9 +21,8 @@ impl UserService {
         let password = password.to_string();
         println!("register");
         tokio::task::spawn_blocking(move || {
-            let user_id=UserDao::register(&pool, &username, &password)?;
-            UserDao::after_register_create_directory(&pool, user_id)
-                .map_err(|e| e.to_string())?;
+            let user_id = UserDao::register(&pool, &username, &password)?;
+            UserDao::after_register_create_directory(&pool, user_id).map_err(|e| e.to_string())?;
             Ok(user_id)
         })
         .await

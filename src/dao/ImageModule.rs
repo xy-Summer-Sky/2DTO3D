@@ -1,7 +1,7 @@
-use crate::pool::app_state::DbPool;
-use crate::schema::images;
 use crate::models::entity::image::Image;
 use crate::models::entity::image::NewImage;
+use crate::pool::app_state::DbPool;
+use crate::schema::images;
 use diesel::prelude::*;
 
 pub struct ImageDao;
@@ -24,5 +24,12 @@ impl ImageDao {
             .get_result(conn)?;
             Ok(image_id)
         })
+    }
+
+    pub fn get_image_by_id(pool: &DbPool, image_id: i32) -> QueryResult<Image> {
+        let mut conn = pool
+            .get()
+            .expect("Failed to get a connection from the pool");
+        images::table.find(image_id).first(&mut conn)
     }
 }

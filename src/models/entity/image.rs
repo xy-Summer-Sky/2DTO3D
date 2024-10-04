@@ -1,6 +1,6 @@
+use crate::schema::images;
 use diesel::prelude::*;
 use diesel::sql_types::{Integer, Nullable, Varchar};
-use crate::schema::images;
 
 #[derive(Queryable, Identifiable)]
 #[diesel(table_name = images, primary_key(image_id))]

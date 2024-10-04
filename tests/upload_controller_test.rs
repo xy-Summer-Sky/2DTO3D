@@ -1,7 +1,8 @@
-use actix_web::{http::header, test, web, App};// 确保导入 BytesMut
+use actix_web::{http::header, test, App};
+// 确保导入 BytesMut
+use photosprocess::controllers::upload_controller::config;
 use std::fs;
 use tokio_util::bytes::BytesMut;
-use photosprocess::controllers::upload_controller::config;
 
 #[actix_rt::test]
 async fn test_convert_video() {
@@ -27,7 +28,7 @@ async fn test_convert_video() {
             header::CONTENT_TYPE,
             header::HeaderValue::from_static("multipart/form-data; boundary=abc123"),
         ))
-        .set_payload(multipart_payload.freeze())  // 转换为 Bytes
+        .set_payload(multipart_payload.freeze()) // 转换为 Bytes
         .to_request();
 
     let resp = test::call_service(&mut app, req).await;

@@ -1,0 +1,1 @@
+futures_util::future::Map<actix_web::types::json::JsonExtractFut<ExtractContourRequestData>, {closure@src\models\request_models_dto\ModelProcess.rs:134:27: 134:35}>

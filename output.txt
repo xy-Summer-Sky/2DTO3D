@@ -1,0 +1,28 @@
+[
+  {
+    "file": "src/controllers/model_controller.rs",
+    "function_name": "config",
+    "return_type": "pub fn config (cfg : & mut web :: ServiceConfig) { cfg . service (new_city) ; cfg . service (upload_image) ; } . sig . output",
+    "parameters": [
+      "cfg : & mut web :: ServiceConfig"
+    ]
+  },
+  {
+    "file": "src/controllers/model_controller.rs",
+    "function_name": "new_city",
+    "return_type": "# [get (\"/new_city/{city_name}/{user_id}\")] pub async fn new_city (app_state : web :: Data < AppState > , path : web :: Path < (String , i32) > ,) -> impl Responder { let pool = & app_state . pool ; let redis_pool = & app_state . redis_pool ; let (city_name , user_id) = path . into_inner () ; match FileManager :: new_city_and_new_directory (& pool , & user_id , & city_name) . await { Ok (_) => HttpResponse :: Ok () . body (format ! (\"New city: {}\" , city_name)) , Err (e) => HttpResponse :: InternalServerError () . body (format ! (\"Failed to create city: {}\" , e)) , } } . sig . output",
+    "parameters": [
+      "app_state : web :: Data < AppState >",
+      "path : web :: Path < (String , i32) >"
+    ]
+  },
+  {
+    "file": "src/controllers/model_controller.rs",
+    "function_name": "upload_image",
+    "return_type": "# [post (\"/upload_image\")] pub async fn upload_image (image_upload : crate :: models :: request_models_dto :: ImageUpload , app_state : web :: Data < AppState > ,) -> impl Responder { let mut redis_conn = match app_state . redis_pool . get () . await { Ok (conn) => conn , Err (e) => return HttpResponse :: InternalServerError () . body (format ! (\"Failed to get Redis connection: {}\" , e)) , } ; let session_id = match image_upload . cookie . clone () { Some (cookie) => cookie , None => return HttpResponse :: BadRequest () . body (\"Missing session_id cookie\") , } ; let session_data = SessionData :: get_session_data_by_id (& mut * redis_conn , & session_id) . await ; let city_id = image_upload . user_info . city_id ; let user_id = image_upload . user_info . user_id ; let mut payload = image_upload . image ; let mut file_content = Vec :: new () ; while let Some (chunk) = payload . next () . await { match chunk { Ok (mut field) => { while let Some (bytes) = field . next () . await { let bytes = bytes . unwrap () ; file_content . extend_from_slice (& bytes) ; } } Err (e) => return HttpResponse :: InternalServerError () . body (format ! (\"Failed to read chunk: {}\" , e)) , } } match FileManager :: receive_image (city_id , & file_content , user_id , & image_upload . image_name , & session_id , & app_state . pool) . await { Ok ((user_id , image_id , city_id)) => HttpResponse :: Ok () . json ((user_id , image_id , city_id)) , Err (e) => HttpResponse :: InternalServerError () . body (format ! (\"Failed to upload image: {}\" , e)) , } } . sig . output",
+    "parameters": [
+      "image_upload : crate :: models :: request_models_dto :: ImageUpload",
+      "app_state : web :: Data < AppState >"
+    ]
+  }
+]

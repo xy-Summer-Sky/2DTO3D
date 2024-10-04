@@ -1,7 +1,7 @@
 use crate::schema::users;
 use diesel::{Insertable, Queryable};
 use serde::{Deserialize, Serialize};
-#[derive(Insertable,Queryable, Serialize, Deserialize)]
+#[derive(Insertable, Queryable, Serialize, Deserialize)]
 #[diesel(table_name = users)]
 pub struct User {
     pub id: i32,
@@ -16,19 +16,18 @@ pub struct User {
     pub last_access: Option<chrono::NaiveDateTime>,
 }
 
-#[derive(Insertable,Queryable)]
+#[derive(Insertable, Queryable)]
 #[diesel(table_name = users)]
-pub struct NewUser{
+pub struct NewUser {
     #[diesel(column_name = username)]
     pub username: String,
     #[diesel(column_name = password_hash)]
-    pub password_hash: String
+    pub password_hash: String,
 }
 
 #[derive(Queryable)]
 #[diesel(table_name = users)]
 pub struct UserLogin {
-
     #[diesel(column_name = id)]
     pub id: i32,
     #[diesel(column_name = username)]
@@ -38,8 +37,5 @@ pub struct UserLogin {
     pub email: Option<String>,
 
     #[diesel(column_name = password_hash)]
-    pub password_hash: String
-
-
+    pub password_hash: String,
 }
-

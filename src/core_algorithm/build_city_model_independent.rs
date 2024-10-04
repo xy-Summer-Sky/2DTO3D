@@ -16,7 +16,9 @@ pub struct ModelPosition {
     pub rotation: [f32; 3],
 }
 
-pub fn generate_model_positions(model_grid_infos: &Vec<ModelGridInfo>) -> Result<Vec<ModelPosition>, String> {
+pub fn generate_model_positions(
+    model_grid_infos: &Vec<ModelGridInfo>,
+) -> Result<Vec<ModelPosition>, String> {
     let mut model_positions = Vec::new();
 
     for model_grid_info in model_grid_infos.iter() {
