@@ -39,6 +39,7 @@ out/
 *.zip
 *.pdb
 *.rlib
+*.mp4
 
 photosprocess/target/
 node_modules
