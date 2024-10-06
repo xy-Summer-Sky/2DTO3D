@@ -185,7 +185,7 @@ pub async fn extract_contours(
     image_upload: crate::models::request_models_dto::ExtractContourRequestData,
 ) -> impl Responder {
     let pool = &app_state.pool;
-    let svg = match crate::service::ModelApiIntegrate::extract_contours(&image_upload, &pool).await
+    let (svg,svg_with,svg_height) = match crate::service::ModelApiIntegrate::extract_contours(&image_upload, &pool).await
     {
         Ok(svg) => svg,
         Err(e) => {
@@ -194,16 +194,17 @@ pub async fn extract_contours(
         }
     };
 
-    let session_id0 = req
+
+    let session_id = req
         .cookie("session_id")
         .map(|c| c.value().to_string())
-        .unwrap();
+        .unwrap_or_else(|| "default_session_id".to_string());
     //svg是提取的轮廓，此处进行保存（存储到目录中并且存储到数据库记录中）
     let original_svg = crate::models::request_models_dto::OriginalSvg {
         user_id: image_upload.user_id,
         city_id: image_upload.city_id,
         image_id: image_upload.image_id,
-        session_id: session_id0,
+        session_id: session_id,
         svg_content: svg.clone(),
     };
     //保存到目录中,同时也保存到数据库记录中
