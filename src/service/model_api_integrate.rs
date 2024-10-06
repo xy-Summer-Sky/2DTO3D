@@ -3,6 +3,7 @@ use crate::models::ModelResponse;
 use crate::pool::app_state::DbPool;
 use crate::service::FileManager;
 use std::error::Error;
+use base64::Engine;
 
 pub struct ModelApiIntegrate;
 
@@ -22,10 +23,12 @@ impl ModelApiIntegrate {
         //返回轮廓
         Ok(svg)
     }
-
+//svg高和宽也是参数
     pub fn contours_to_svg(contourn_points: &serde_json::Value) -> Result<String, Box<dyn Error>> {
-        let mut svg_content =
-            String::from(r#"<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">"#);
+        let svg_width=contourn_points["image_width"].as_f64().unwrap();
+        let svg_height=contourn_points["image_height"].as_f64().unwrap();
+    let mut svg_content =
+            String::from(format!(r#"<svg viewBox="0 0 {} {}" xmlns="http://www.w3.org/2000/svg">"#, svg_width, svg_height));
 
         if let Some(contours) = contourn_points["contours"].as_array() {
             for (index, contour) in contours.iter().enumerate() {
@@ -213,7 +216,7 @@ let child_contours: Vec<Vec<(f64, f64)>> = path_group
             let obj_data = std::fs::read_to_string(&model_save_path).unwrap();
             let model_info = crate::models::ModelInfo {
                 model_id: model_id_pk, // Replace with actual model ID if available
-                model_data: base64::encode(obj_data),
+                model_data: base64::engine::general_purpose::STANDARD.encode(obj_data),
             };
             models.push(model_info);
         }

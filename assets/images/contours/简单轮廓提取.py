@@ -416,7 +416,7 @@ def find_contour_outline(image):
 #
 # p = 0
 # g_window_name = "contourImg"
-g_window_wh = [800, 600]  # 窗口宽高
+g_window_wh = [912, 1230]  # 窗口宽高
 g_location_win = [0, 0]  # 相对于大图，窗口在图片中的位置
 g_zoom, g_step = 1, 0.1  # 图片缩放比例和缩放系数
 g_image_original = None  # 原始图片
@@ -459,7 +459,7 @@ global  g_window_name
 
 
 def right_click(x, y):
-    global g_image_zoom, g_image_original, mask_original, g_location_win
+    global g_image_zoom, g_image_original, mask_original, g_location_win,g_window_wh
     g_original_h, g_original_w = g_image_zoom.shape[0:2]
     mask = np.zeros((g_original_h + 2, g_original_w + 2, 1), np.uint8)
     mask[150:250, 150:250] = 0
@@ -476,16 +476,18 @@ def right_click(x, y):
             if dist < min_dist:
                 min_dist = dist
                 nearest_point = (i, j)
+
     cv2.floodFill(g_image_original, mask_original, nearest_point, (255, 0, 0), (30, 30, 30),(30, 30, 30), cv2.FLOODFILL_FIXED_RANGE)
 def process_image_from_json(json_data):
-    global g_image_zoom, g_image_original, mask_original, g_location_win
-    g_window_wh = [json_data['window']['width'], json_data['window']['height']]
+    global g_image_zoom, g_image_original, mask_original, g_location_win,g_window_wh
+    # g_window_wh = [json_data['window']['width'], json_data['window']['height']]
     g_location_win = [json_data['location']['win_x'], json_data['location']['win_y']]
-    g_zoom = json_data['zoom']
-    g_step = json_data['step']
+    # g_zoom = json_data['zoom']
+    # g_step = json_data['step']
     click_location = json_data['right_click']
     image_path=json_data['image_path']
     g_image_original = cv2.imread(image_path)
+    g_window_wh = [g_image_original.shape[1], g_image_original.shape[0]]
     # g_image_original = cv2.imread(json_data['image_path'])
     g_image_zoom=g_image_original.copy()
     # g_image_zoom = cv2.resize(g_image_original, (int(g_image_original.shape[1] * g_zoom), int(g_image_original.shape[0] * g_zoom)), interpolation=cv2.INTER_AREA)
@@ -505,13 +507,13 @@ contourn_points=[]
 
 def main(image_path, json_path):
     current_dir = os.path.dirname(__file__)
-    global g_image_zoom, g_image_original, mask_original, g_location_win,contourn_points
+    global g_image_zoom, g_image_original, mask_original, g_location_win,contourn_points,g_window_wh
     # 构建相对于当前文件的路径
     # image_path = os.path.join(current_dir, image_path)
     # json_path= os.path.join(current_dir, json_path)
 
-    g_window_wh = [800, 600]  # 窗口宽高
-    g_zoom, g_step = 1, 0.1  # 图片缩放比例和缩放系数
+    # g_window_wh = [800, 600]  # 窗口宽高
+    # g_zoom, g_step = 1, 0.1  # 图片缩放比例和缩放系数
     g_image_original = cv2.imread(image_path)  # 原始图片，建议大于窗口宽高（800*600）
     # 读取 JSON 文件
     with open(json_path, 'r') as f:
@@ -520,10 +522,10 @@ def main(image_path, json_path):
     # 调用 process_image_from_json 函数
     # process_image_from_json(json_data)
 
-    g_window_wh = [json_data['window']['width'], json_data['window']['height']]
+    # g_window_wh = [json_data['window']['width'], json_data['window']['height']]
     g_location_win = [json_data['location']['win_x'], json_data['location']['win_y']]
-    g_zoom = json_data['zoom']
-    g_step = json_data['step']
+    # g_zoom = json_data['zoom']
+    # g_step = json_data['step']
 
     process_image(json_data)
 
@@ -654,7 +656,12 @@ def process_image(json_data):
 
     for click_location in click_locations:
     # Call the right click function with parameters
+        g_image_original = cv2.imread(json_data['image_path'])
+        g_image_zoom=g_image_original.copy()
         right_click(click_location["x"], click_location["y"])
+        # 每次处理都重新加载原始图片
+
+        # g_image_zoom=g_image_original.copy()
         # Save the processed image
         # cv2.imwrite("floodfill.png", g_image_zoom)
 

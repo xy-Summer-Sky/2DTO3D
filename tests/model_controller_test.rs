@@ -30,7 +30,7 @@ mod model_controller_tests {
     #[actix_rt::test]
     async fn test_upload_image() {
         //先将指定图片转换为Vec<u8>格式
-        let image_data = include_bytes!("../assets/images/contours/5.png");
+        let image_data = include_bytes!("../assets/images/contours/test2.svg.png");
         let app_state = AppState::new().await;
         let _ = env_logger::builder().is_test(true).try_init();
         let mut app = test::init_service(
@@ -53,7 +53,7 @@ mod model_controller_tests {
 
     #[actix_rt::test]
     async fn test_extract_contours() {
-        let image_data = include_bytes!("../assets/images/contours/5.png");
+        let image_data = include_bytes!("../assets/images/img_1.png");
         let app_state = AppState::new().await;
         let _ = env_logger::builder().is_test(true).try_init();
         let mut app = test::init_service(
@@ -67,16 +67,71 @@ mod model_controller_tests {
             .insert_header(("Content-Type", "application/json"))
             .insert_header(("Cookie", "session_id=test_session_id"))
             .set_payload(format!(
+
                 r#"{{
-    "user_id": 1,
-    "city_id": 1,
-    "image_id": 6,
-    "right_clicks": [
-        {{"x": 30, "y": 50, "type": "right"}},
-        {{"x": 100, "y": 50, "type": "right"}}
-    ],
-    "image_data": "{}"
+"user_id": 1,
+"city_id": 1,
+"image_id": 6,
+"right_clicks": [
+{{
+"x": 186,
+"y": 179,
+"type": "right"
+}},
+{{
+"x": 270,
+"y": 242,
+"type": "right"
+}},
+{{
+"x": 606,
+"y": 215,
+"type": "right"
+}},
+{{
+"x": 655,
+"y": 123,
+"type": "right"
+}},
+{{
+"x": 626,
+"y": 634,
+"type": "right"
+}},
+{{
+"x": 759,
+"y": 635,
+"type": "right"
+}},
+{{
+"x": 683,
+"y": 802,
+"type": "right"
+}},
+{{
+"x": 334,
+"y": 998,
+"type": "right"
+}},
+{{
+"x": 313,
+"y": 866,
+"type": "right"
+}},
+{{
+"x": 257,
+"y": 586,
+"type": "right"
+}},
+{{
+"x": 354,
+"y": 523,
+"type": "right"
+}}
+],
+"image_data": "{}"
 }}"#,
+
                 base64::encode(&image_data)
             ))
             .to_request();
@@ -104,15 +159,48 @@ mod model_controller_tests {
                 r#"{
                 "session_id": "test_session_id",
            "path_groups": [
+            {
+                            "city_id": 1,
+                            "user_id": 1,
+                            "parent_contour": {
+                                "path": [
+                                 { "x": 2, "y": 2 },
+{ "x": 195, "y": 0 },
+{ "x": 0, "y": -190 },
+{ "x": -195, "y": 0 },
+{ "x": 0, "y": 190 }
+                                ],
+                                "height": 50
+                            },
+                            "child_contours": [
+                                {
+                                    "path": [
+{ "x": 134, "y": 17 },
+{ "x": -20, "y": -4 },
+{ "x": -22, "y": 0 },
+{ "x": -9, "y": 2 },
+{ "x": -9, "y": 4 },
+{ "x": -14, "y": 14 },
+{ "x": -7, "y": 20 },
+{ "x": 0, "y": 108 },
+{ "x": 99, "y": 0 },
+{ "x": 0, "y": -138 },
+{ "x": -18, "y": -6 }
+                                    ],
+                                    "height": 76
+                                }
+                            ],
+                            "image_id": 6
+                        },
     {
         "city_id": 1,
         "user_id": 1,
         "parent_contour": {
             "path": [
-                {"x": 2.0, "y": 2.0},
-                {"x": 2.0, "y": 192.0},
+                {"x": -20.0, "y": -20.0},
+                {"x": -2.0, "y": 192.0},
                 {"x": 197.0, "y": 192.0},
-                {"x": 197.0, "y": 2.0}
+                {"x": 197.0, "y": -50.0}
             ],
             "height": 50.0
         },

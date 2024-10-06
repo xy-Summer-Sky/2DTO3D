@@ -2,7 +2,6 @@ use crate::models::request_models_dto::ExtractContourRequestData;
 use base64::Engine;
 use opencv::core::CV_8U;
 use opencv::core::{in_range, MatTrait, Point, Scalar, Vector, BORDER_CONSTANT};
-use opencv::highgui::{named_window, resize_window, WINDOW_NORMAL};
 use opencv::imgcodecs::{imencode, imread, imwrite, IMREAD_COLOR};
 use opencv::imgproc::flood_fill;
 use opencv::imgproc::*;
@@ -235,13 +234,13 @@ impl ExtractContour {
         use opencv::core::{Mat, Rect, Scalar};
         if let Some(ref mut g_image_zoom) = self.g_image_zoom {
             let (g_original_h, g_original_w) = (g_image_zoom.rows(), g_image_zoom.cols());
-            let mask = Mat::zeros(g_original_h + 2, g_original_w + 2, CV_8U)?;
+            Mat::zeros(g_original_h + 2, g_original_w + 2, CV_8U)?;
             let mut roi = Rect::new(150, 150, 100, 100); // x, y, width, height
-            // let mut sub_mat: Mat = mask.roi(roi).unwrap().to_mat()?;
-            // sub_mat.set_to(&Scalar::from(0.0), &Mat::default())?;
+                                                         // let mut sub_mat: Mat = mask.roi(roi).unwrap().to_mat()?;
+                                                         // sub_mat.set_to(&Scalar::from(0.0), &Mat::default())?;
             flood_fill(
                 g_image_zoom,
-                opencv::core::Point::new(
+                Point::new(
                     (self.g_location_win[0] + x) as i32,
                     (self.g_location_win[1] + y) as i32,
                 ),
@@ -308,13 +307,15 @@ impl ExtractContour {
     fn process_image(
         &mut self,
         json_data: &serde_json::Value,
+        image_data:&String
     ) -> Result<serde_json::Value, Box<dyn std::error::Error>> {
         use opencv::core::MatTrait;
+        println!("g_window_wh: {:?}", self.g_window_wh);
         let mut contourn_points = serde_json::json!({
-            "contours": []
+            "contours": [],
+            "image_width": self.g_window_wh[0],
+            "image_height": self.g_window_wh[1] ,
         });
-
-        let mut g_location_win: [i32; 2] = [0, 0];
 
         let click_locations = json_data["right_clicks"].as_array().unwrap();
         // let image_path = json_data["image_path"].as_str().unwrap();
@@ -329,10 +330,19 @@ impl ExtractContour {
         //     self.g_window_wh[1] as i32,
         // )?;
 
-        let file = File::create("newoutput2.json")?;
-        serde_json::to_writer(&file, &json_data)?;
+        // let file = File::create("newoutput2.json")?;
+        // serde_json::to_writer(&file, &json_data)?;
 
+        // let image_data=json_data["image_data"]. as_str().unwrap();
         for click_location in click_locations {
+            //每次处理一个点击位置，都重新加载一次原始图片
+            self.g_image_original = Some(opencv::imgcodecs::imdecode(
+                &opencv::core::Vector::<u8>::from(
+                    base64::engine::general_purpose::STANDARD.decode(&image_data)?,
+                ),
+                IMREAD_COLOR,
+            )?);
+            self.g_image_zoom = self.g_image_original.clone();
             self.right_click(
                 click_location["x"].as_f64().unwrap(),
                 click_location["y"].as_f64().unwrap(),
@@ -347,8 +357,6 @@ impl ExtractContour {
             //         ),
             //     )));
             // }
-
-            g_location_win = [0.0 as i32, 0.0 as i32];
 
             let g_image_original = self.g_image_original.as_mut().unwrap();
             let mut mask = Mat::default();
@@ -409,7 +417,7 @@ impl ExtractContour {
             let mut image = Mat::default();
             threshold(&gray, &mut image, 127.0, 255.0, THRESH_BINARY)?;
 
-            let contour: Vec<opencv::core::Point> = self.find_contour_outline(&image);
+            let contour: Vec<Point> = self.find_contour_outline(&image);
             println!("失真程度为0.002*周长以内的点结果");
             for Point in &contour {
                 println!("[{}, {}],", Point.x, Point.y);
@@ -419,11 +427,11 @@ impl ExtractContour {
             let middle_part = &contour[..contour.len() - 1];
             let n = 16 % middle_part.len();
             let contour = [&middle_part[n..], &middle_part[..n]].concat();
-            let contour: Vec<opencv::core::Point> = [&contour[..], &vec![contour[0]]].concat();
+            let contour: Vec<Point> = [&contour[..], &vec![contour[0]]].concat();
 
             let mut points: Vec<Point3d> = contour
                 .iter()
-                .map(|p: &opencv::core::Point| Point3d {
+                .map(|p: &Point| Point3d {
                     x: p.x as f64,
                     y: p.y as f64,
                     z: 0.0,
@@ -467,7 +475,7 @@ impl ExtractContour {
         std::env::current_dir()?;
 
         // self.g_location_win = [0.0, 0.0];
-        // self.g_window_wh = [800.0, 600.0]; // 窗口宽高
+
         // self.g_zoom = 1.0;
         // self.g_step = 0.1;
         self.g_image_original = Some(opencv::imgcodecs::imdecode(
@@ -476,15 +484,21 @@ impl ExtractContour {
             ),
             IMREAD_COLOR,
         )?);
-        // let file = File::open(json_path)?;
+        self.g_window_wh = [
+            self.g_image_original.as_ref().unwrap().cols() as f64,
+            self.g_image_original.as_ref().unwrap().rows() as f64,
+        ]; // 窗口宽高
+        //输出宽高
+        println!("窗口宽高：{}, {}", self.g_window_wh[0], self.g_window_wh[1]);
+           // let file = File::open(json_path)?;
         let json_data = serde_json::to_value(&image_data)?;
         // self.g_location_win = [0.0, 0.0];
 
-        Ok(self.process_image(&json_data)?)
+        Ok(self.process_image(&json_data,&image_data.image_data)?)
     }
     pub fn new() -> Self {
         ExtractContour {
-            g_window_wh: [800.0, 600.0],
+            g_window_wh: [0.0, 0.0],
             g_location_win: [0.0, 0.0],
             g_zoom: 1.0,
             g_step: 0.1,

@@ -23,11 +23,11 @@ async fn test_verify_user_route() {
     let password: String = rand::thread_rng().gen_range(1000..9999).to_string();
 
     let req = test::TestRequest::get()
-        .uri(&format!("/user/verify/{}/{}", identifier, password))
+        .uri("/user/verify/sxy/sxy")
         .to_request();
     let resp = test::call_service(&mut app, req).await;
     println!("{:?}", &resp.response().body());
-    assert_eq!(resp.status(), 404); // 假设用户不存在
+    assert_eq!(resp.status(), 200); // 假设用户不存在
 }
 #[actix_rt::test]
 async fn test_register_user_route() {

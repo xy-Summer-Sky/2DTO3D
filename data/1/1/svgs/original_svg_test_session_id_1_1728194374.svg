@@ -1,0 +1,17 @@
+<svg viewBox="0 0 912 1230" xmlns="http://www.w3.org/2000/svg">
+    <path id="contour_0" d="M186,33 L146,33 L124,41 L102,63 L93,89 L93,251 L238,251 L238,47 L211,38 Z" fill="none"
+          stroke="black" stroke-width="1"/>
+    <path id="contour_1" d="M16,16 L16,298 L305,298 L305,16 Z" fill="none" stroke="black" stroke-width="1"/>
+    <path id="contour_2"
+          d="M639,156 L632,153 L622,152 L621,151 L610,152 L602,154 L589,160 L580,166 L569,176 L566,180 L566,256 L659,256 L659,179 L653,169 L646,161 Z"
+          fill="none" stroke="black" stroke-width="1"/>
+    <path id="contour_3" d="M691,316 L691,107 L685,68 L636,97 L600,97 L577,105 L556,126 L529,244 L546,316 Z" fill="none"
+          stroke="black" stroke-width="1"/>
+    <path id="contour_4" d="M606,592 L606,667 L698,667 L698,592 Z" fill="none" stroke="black" stroke-width="1"/>
+    <path id="contour_5" d="M577,559 L577,910 L826,910 L826,559 Z" fill="none" stroke="black" stroke-width="1"/>
+    <path id="contour_6" d="M618,714 L629,881 L797,881 L797,718 Z" fill="none" stroke="black" stroke-width="1"/>
+    <path id="contour_7" d="M216,934 L216,1081 L362,1081 L362,934 Z" fill="none" stroke="black" stroke-width="1"/>
+    <path id="contour_8" d="M127,789 L127,1117 L429,1117 L429,789 Z" fill="none" stroke="black" stroke-width="1"/>
+    <path id="contour_9" d="M147,484 L147,631 L286,631 L286,484 Z" fill="none" stroke="black" stroke-width="1"/>
+    <path id="contour_10" d="M51,374 L51,701 L352,701 L409,461 Z" fill="none" stroke="black" stroke-width="1"/>
+</svg>

@@ -2,23 +2,23 @@
     "parent": {
         "contour_points": [
             {
-                "lon": 0,
-                "lat": 0,
+                "lon": 577,
+                "lat": 559,
                 "height": 100
             },
             {
-                "lon": 0,
-                "lat": 199,
+                "lon": 577,
+                "lat": 910,
                 "height": 100
             },
             {
-                "lon": 189,
-                "lat": 199,
+                "lon": 826,
+                "lat": 910,
                 "height": 100
             },
             {
-                "lon": 189,
-                "lat": 0,
+                "lon": 826,
+                "lat": 559,
                 "height": 100
             }
         ],
@@ -28,78 +28,98 @@
         {
             "contour_points": [
                 {
-                    "lon": 82,
-                    "lat": 21,
+                    "lon": 618,
+                    "lat": 714,
                     "height": 100
                 },
                 {
-                    "lon": 76,
-                    "lat": 29,
+                    "lon": 629,
+                    "lat": 881,
                     "height": 100
                 },
                 {
-                    "lon": 73,
-                    "lat": 41,
+                    "lon": 797,
+                    "lat": 881,
                     "height": 100
                 },
                 {
-                    "lon": 72,
-                    "lat": 53,
+                    "lon": 797,
+                    "lat": 718,
+                    "height": 100
+                }
+            ],
+            "height": 100
+        },
+        {
+            "contour_points": [
+                {
+                    "lon": 618,
+                    "lat": 714,
                     "height": 100
                 },
                 {
-                    "lon": 68,
-                    "lat": 64,
+                    "lon": 629,
+                    "lat": 881,
                     "height": 100
                 },
                 {
-                    "lon": 61,
-                    "lat": 69,
+                    "lon": 797,
+                    "lat": 881,
                     "height": 100
                 },
                 {
-                    "lon": 54,
-                    "lat": 69,
+                    "lon": 797,
+                    "lat": 718,
+                    "height": 100
+                }
+            ],
+            "height": 100
+        },
+        {
+            "contour_points": [
+                {
+                    "lon": 618,
+                    "lat": 714,
                     "height": 100
                 },
                 {
-                    "lon": 47,
-                    "lat": 67,
+                    "lon": 629,
+                    "lat": 881,
                     "height": 100
                 },
                 {
-                    "lon": 47,
-                    "lat": 167,
+                    "lon": 797,
+                    "lat": 881,
                     "height": 100
                 },
                 {
-                    "lon": 95,
-                    "lat": 138,
+                    "lon": 797,
+                    "lat": 718,
+                    "height": 100
+                }
+            ],
+            "height": 100
+        },
+        {
+            "contour_points": [
+                {
+                    "lon": 606,
+                    "lat": 592,
                     "height": 100
                 },
                 {
-                    "lon": 103,
-                    "lat": 139,
+                    "lon": 606,
+                    "lat": 667,
                     "height": 100
                 },
                 {
-                    "lon": 146,
-                    "lat": 167,
+                    "lon": 698,
+                    "lat": 667,
                     "height": 100
                 },
                 {
-                    "lon": 146,
-                    "lat": 66,
-                    "height": 100
-                },
-                {
-                    "lon": 99,
-                    "lat": 20,
-                    "height": 100
-                },
-                {
-                    "lon": 86,
-                    "lat": 19,
+                    "lon": 698,
+                    "lat": 592,
                     "height": 100
                 }
             ],
