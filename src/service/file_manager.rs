@@ -213,6 +213,8 @@ let img = load_from_memory(file_content).map_err(|e| format!("Failed to load ima
         path_group: &PathGroup,
         file_path_name: &str,
         pool: &DbPool,
+        svg_height:f64,
+        svg_width:f64
     ) -> Result<(i32, i32), String> {
         //根据image_id获取image记录中的iamge_path
         let image: Image = ImageDao::get_image_by_id(pool, path_group.image_id)
@@ -238,7 +240,7 @@ let img = load_from_memory(file_content).map_err(|e| format!("Failed to load ima
         ).await?;
 
         //保存到实际的文件目录中
-        let svg_file = path_group.to_svg(&mut std::fs::File::create(file_path_name).map_err(|e| format!("Failed to create file: {:?}", e))?).unwrap();
+        let svg_file = path_group.to_svg(&mut std::fs::File::create(file_path_name).map_err(|e| format!("Failed to create file: {:?}", e))?,svg_height,svg_width).unwrap();
 
         Ok((svg_id_pk, file_id))
     }

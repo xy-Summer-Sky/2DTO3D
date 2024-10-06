@@ -4,6 +4,7 @@ use crate::pool::app_state::DbPool;
 use crate::service::FileManager;
 use std::error::Error;
 use base64::Engine;
+use crate::dao::CityDao;
 
 pub struct ModelApiIntegrate;
 
@@ -12,21 +13,29 @@ impl ModelApiIntegrate {
     pub async fn extract_contours(
         image_upload: &ExtractContourRequestData,
         pool: &crate::pool::app_state::DbPool,
-    ) -> Result<String, String> {
+    ) -> Result<(String,f64,f64), String> {
         // Extract contours from the uploaded image
         let mut extracted_contours = crate::service::extract_contour::ExtractContour::new();
         let contours = extracted_contours
             .extract_contour_api(image_upload)
             .expect("Failed to extract contours");
+        //从contours中提取image_width和image_height和city_id
+        let image_width=contours["image_width"].as_f64().unwrap();
+        let image_height=contours["image_height"].as_f64().unwrap();
+        let city_id=contours["city_id"].as_i64().unwrap();
+        //更新数据库中的city_id的image_width和image_height
+        CityDao::update_city_svg_height_and_svg_width(pool, city_id as i32, image_width as f32, image_height as f32).unwrap();
+
         //处理轮廓为svg格式，并持久化，并且做为返回值
         let svg = Self::contours_to_svg(&contours).expect("Failed to save contours as SVG");
         //返回轮廓
         Ok(svg)
     }
 //svg高和宽也是参数
-    pub fn contours_to_svg(contourn_points: &serde_json::Value) -> Result<String, Box<dyn Error>> {
+    pub fn contours_to_svg(contourn_points: &serde_json::Value) -> Result<(String,f64,f64), Box<dyn Error>> {
         let svg_width=contourn_points["image_width"].as_f64().unwrap();
         let svg_height=contourn_points["image_height"].as_f64().unwrap();
+
     let mut svg_content =
             String::from(format!(r#"<svg viewBox="0 0 {} {}" xmlns="http://www.w3.org/2000/svg">"#, svg_width, svg_height));
 
@@ -58,7 +67,7 @@ impl ModelApiIntegrate {
 
         svg_content.push_str("</svg>");
 
-        Ok(svg_content)
+        Ok((svg_content,svg_width,svg_height))
     }
 
     //轮廓提取之后，接收用户的分组信息，将分组信息持久化到数据库中
@@ -121,6 +130,7 @@ impl ModelApiIntegrate {
     ) -> Result<ModelResponse, Box<dyn Error>> {
         //构建一个向量，存储每一个path_group的obj模型，最终做为返回值
         let mut models = Vec::new();
+        let  (svg_height, svg_width)=CityDao::get_city_svg_height_and_svg_width(pool, path_groups.path_groups[0].city_id).unwrap();
 
         //遍历每一个path_group，生成模型
         for path_group in &path_groups.path_groups {
@@ -197,10 +207,12 @@ let child_contours: Vec<Vec<(f64, f64)>> = path_group
                 uuid::Uuid::new_v4()
             );
             //保存svg文件到svg和file数据库记录中
-            let (svg_id_pk, svg_file_id) = crate::service::FileManager::save_new_svg_database(
+            let (svg_id_pk, svg_file_id,) = crate::service::FileManager::save_new_svg_database(
                 path_group,
                 svg_file_name.as_str(),
                 pool,
+                svg_height.into(),
+                svg_width.into()
             ).await?;
 
             let new_model = crate::models::entity::model::NewModel {

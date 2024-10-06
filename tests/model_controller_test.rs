@@ -13,7 +13,7 @@ mod model_controller_tests {
                 .app_data(actix_web::web::Data::new(app_state.clone()))
                 .configure(config_user_routes),
         )
-        .await;
+            .await;
         let req = test::TestRequest::get()
             .uri("/model/new_city/test_city/1")
             .to_request();
@@ -38,7 +38,7 @@ mod model_controller_tests {
                 .app_data(actix_web::web::Data::new(app_state.clone()))
                 .configure(config_user_routes),
         )
-        .await;
+            .await;
         let req = test::TestRequest::post()
             .uri("/model/upload_image?user_id=1&city_id=1&image_name=example_image.png")
             .insert_header(("Content-Type", "multipart/form-data"))
@@ -61,13 +61,12 @@ mod model_controller_tests {
                 .app_data(actix_web::web::Data::new(app_state.clone()))
                 .configure(config_user_routes),
         )
-        .await;
+            .await;
         let req = test::TestRequest::post()
             .uri("/model/extract_contours")
             .insert_header(("Content-Type", "application/json"))
             .insert_header(("Cookie", "session_id=test_session_id"))
             .set_payload(format!(
-
                 r#"{{
 "user_id": 1,
 "city_id": 1,
@@ -131,7 +130,6 @@ mod model_controller_tests {
 ],
 "image_data": "{}"
 }}"#,
-
                 base64::encode(&image_data)
             ))
             .to_request();
@@ -150,7 +148,7 @@ mod model_controller_tests {
                 .app_data(actix_web::web::Data::new(app_state.clone()))
                 .configure(config_user_routes),
         )
-        .await;
+            .await;
         let req = test::TestRequest::post()
             .uri("/model/build_model")
             .insert_header(("Content-Type", "application/json"))

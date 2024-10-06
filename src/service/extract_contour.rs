@@ -312,6 +312,7 @@ impl ExtractContour {
         use opencv::core::MatTrait;
         println!("g_window_wh: {:?}", self.g_window_wh);
         let mut contourn_points = serde_json::json!({
+            "city_id": json_data["city_id"],
             "contours": [],
             "image_width": self.g_window_wh[0],
             "image_height": self.g_window_wh[1] ,
@@ -473,11 +474,6 @@ impl ExtractContour {
         image_data: &ExtractContourRequestData,
     ) -> Result<serde_json::Value, Box<dyn std::error::Error>> {
         std::env::current_dir()?;
-
-        // self.g_location_win = [0.0, 0.0];
-
-        // self.g_zoom = 1.0;
-        // self.g_step = 0.1;
         self.g_image_original = Some(opencv::imgcodecs::imdecode(
             &opencv::core::Vector::<u8>::from(
                 base64::engine::general_purpose::STANDARD.decode(&image_data.image_data)?,
@@ -488,6 +484,7 @@ impl ExtractContour {
             self.g_image_original.as_ref().unwrap().cols() as f64,
             self.g_image_original.as_ref().unwrap().rows() as f64,
         ]; // 窗口宽高
+
         //输出宽高
         println!("窗口宽高：{}, {}", self.g_window_wh[0], self.g_window_wh[1]);
            // let file = File::open(json_path)?;

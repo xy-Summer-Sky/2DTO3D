@@ -31,7 +31,7 @@ impl CityDao {
         let mut conn = pool
             .get()
             .expect("Failed to get a connection from the pool");
-        cities::table.find(id).first(&mut conn)
+        cities::table.find(id).first::<City>(&mut conn)
     }
 
     pub fn update_city(pool: &DbPool, city_id: i32, city: &City) -> QueryResult<usize> {
@@ -87,5 +87,25 @@ impl CityDao {
         });
 
         transaction_result
+    }
+
+    pub fn get_city_svg_height_and_svg_width(pool: &DbPool, city_id: i32) -> QueryResult<(f32, f32)> {
+        let mut conn = pool
+            .get()
+            .expect("Failed to get a connection from the pool");
+        let city = cities::table.find(city_id).first::<City>(&mut conn)?;
+        Ok((city.svg_height.unwrap(), city.svg_width.unwrap()))
+    }
+
+    pub fn update_city_svg_height_and_svg_width(pool: &DbPool, city_id: i32, svg_height: f32, svg_width: f32) -> QueryResult<usize> {
+        let mut conn = pool
+            .get()
+            .expect("Failed to get a connection from the pool");
+        diesel::update(cities::table.find(city_id))
+            .set((
+                cities::svg_height.eq(svg_height),
+                cities::svg_width.eq(svg_width),
+            ))
+            .execute(&mut conn)
     }
 }

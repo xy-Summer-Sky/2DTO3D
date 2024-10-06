@@ -2,6 +2,7 @@ use crate::schema::cities;
 // src/entity/city.rs
 use diesel::{Insertable, Queryable};
 use serde::{Deserialize, Serialize};
+
 #[derive(Insertable, Queryable, Serialize, Deserialize)]
 #[diesel(table_name = cities)]
 pub struct City {
@@ -10,6 +11,8 @@ pub struct City {
     pub city_name: String,
     pub is_single_model: Option<bool>,
     pub model_path: Option<String>,
+    pub svg_height: Option<f32>,
+    pub svg_width: Option<f32>,
 }
 
 #[derive(Insertable, Queryable)]

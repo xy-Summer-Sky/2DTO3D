@@ -106,15 +106,16 @@ impl FromRequest for PathGroups {
 }
 
 impl PathGroup {
-    pub fn to_svg(&self, file: &mut File) -> std::io::Result<()> {
+    pub fn to_svg(&self, file: &mut File,svg_height:f64,svg_width:f64) -> std::io::Result<()> {
         writeln!(
             file,
             r#"<?xml version="1.0" encoding="UTF-8" standalone="no"?>"#
         )?;
-        writeln!(
-            file,
-            r#"<svg viewBox="0 0 600 800" xmlns="http://www.w3.org/2000/svg">"#
-        )?;
+      writeln!(
+    file,
+    r#"<svg viewBox="0 0 {} {}" xmlns="http://www.w3.org/2000/svg">"#,
+    svg_width, svg_height
+)?;
 
         // 写入父路径
         writeln!(
@@ -149,7 +150,7 @@ impl PathGroup {
 }
 
 impl PathGroups {
-    pub fn save_path_groups(&self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn save_path_groups(&self,svg_height:f64,svg_width:f64) -> Result<(), Box<dyn std::error::Error>> {
         let timestamp = std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)?
             .as_secs();
@@ -163,7 +164,7 @@ impl PathGroups {
                 timestamp + index as u64
             );
             let mut file = File::create(&file_name)?;
-            path_group.to_svg(&mut file)?;
+            path_group.to_svg(&mut file,svg_height,svg_width)?;
         }
 
         Ok(())
