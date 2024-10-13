@@ -280,6 +280,14 @@ impl ModelGenerate {
             }
         }
     }
+    pub (crate) fn genenate_model_one_parent_contour(&mut self, contour: &Vec<(f64, f64)>, height: f64) {
+        self.gen_contour_vertex(contour, height);
+        self.gen_contour_vertex(contour, 0.0);
+        self.gen_side_face(contour, height, 0.0);
+        self.gen_top_face2(contour, height);
+        self.gen_bottom_face(contour, 0.0);
+
+    }
 
     pub(crate) fn generate_model(
         &mut self,

@@ -1,5 +1,5 @@
 use crate::pool::app_state::AppState;
-use crate::service::{FileManager, SessionData};
+use crate::service::{FileManager, ModelsManagement, SessionData};
 use actix_web::{get, post, web, HttpRequest, HttpResponse, Responder};
 use r2d2::Pool;
 use r2d2_redis::RedisConnectionManager;
@@ -11,6 +11,8 @@ pub fn config(cfg: &mut web::ServiceConfig) {
     cfg.service(upload_image);
     cfg.service(extract_contours);
     cfg.service(build_model);
+    cfg.service(get_city_models);
+    cfg.service(get_model_by_id);
 }
 
 /// ### `GET /new_city/{city_name}/{user_id}`
@@ -292,3 +294,29 @@ pub async fn build_model(
     //返回模型文件用于解码渲染
     HttpResponse::Ok().json(models)
 }
+
+#[get("/get_city_models/{city_id}")]
+pub async fn get_city_models(
+    app_state: web::Data<AppState>,
+    path: web::Path<i32>,
+) -> impl Responder {
+    let pool = &app_state.pool;
+    let city_id = path.into_inner();
+    match ModelsManagement::get_city_models_by_city_id(&pool, city_id).await {
+        Ok(models) => HttpResponse::Ok().json(models),
+        Err(e) => HttpResponse::InternalServerError().body(format!("Failed to get city models: {}", e)),
+    }
+}
+
+#[get("/get_model_by_id/{model_id}")]
+pub async fn get_model_by_id(
+    app_state: web::Data<AppState>,
+    path:web::Path<i32>) -> impl Responder {
+    let pool = &app_state.pool;
+    let model_id = path.into_inner();
+    match ModelsManagement::get_model_by_id(&pool, model_id).await {
+        Ok(model) => HttpResponse::Ok().json(model),
+        Err(e) => HttpResponse::InternalServerError().body(format!("Failed to get model by id: {}", e)),
+    }
+}
+

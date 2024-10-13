@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod model_controller_tests {
-    use actix_web::{test, App};
+    use actix_web::{test, web, App};
     use photosprocess::config::routes::config_user_routes;
     use photosprocess::pool::app_state::AppState;
 
@@ -13,7 +13,7 @@ mod model_controller_tests {
                 .app_data(actix_web::web::Data::new(app_state.clone()))
                 .configure(config_user_routes),
         )
-            .await;
+        .await;
         let req = test::TestRequest::get()
             .uri("/model/new_city/test_city/1")
             .to_request();
@@ -38,7 +38,7 @@ mod model_controller_tests {
                 .app_data(actix_web::web::Data::new(app_state.clone()))
                 .configure(config_user_routes),
         )
-            .await;
+        .await;
         let req = test::TestRequest::post()
             .uri("/model/upload_image?user_id=1&city_id=1&image_name=example_image.png")
             .insert_header(("Content-Type", "multipart/form-data"))
@@ -61,7 +61,7 @@ mod model_controller_tests {
                 .app_data(actix_web::web::Data::new(app_state.clone()))
                 .configure(config_user_routes),
         )
-            .await;
+        .await;
         let req = test::TestRequest::post()
             .uri("/model/extract_contours")
             .insert_header(("Content-Type", "application/json"))
@@ -148,7 +148,7 @@ mod model_controller_tests {
                 .app_data(actix_web::web::Data::new(app_state.clone()))
                 .configure(config_user_routes),
         )
-            .await;
+        .await;
         let req = test::TestRequest::post()
             .uri("/model/build_model")
             .insert_header(("Content-Type", "application/json"))
@@ -234,21 +234,6 @@ mod model_controller_tests {
             "height": 50.0
         },
         "child_contours": [
-            {
-                "path": [
-                    {"x": 140.0, "y": 20.0},
-                    {"x": 120.0, "y": 15.0},
-                    {"x": 95.0, "y": 15.0},
-                    {"x": 85.0, "y": 18.0},
-                    {"x": 75.0, "y": 22.0},
-                    {"x": 65.0, "y": 35.0},
-                    {"x": 55.0, "y": 55.0},
-                    {"x": 55.0, "y": 165.0},
-                    {"x": 155.0, "y": 165.0},
-                    {"x": 155.0, "y": 25.0}
-                ],
-                "height": 100.0
-            }
         ],
         "image_id": 6
     }
@@ -256,6 +241,42 @@ mod model_controller_tests {
             }"#,
             )
             .to_request();
+        let resp = test::call_service(&mut app, req).await;
+        println!("{:?}", &resp);
+        println!("{:?}", &resp.response().body());
+        assert!(resp.status().is_success());
+    }
+
+
+    use photosprocess::controllers::model_controller::{get_city_models, get_model_by_id};
+
+    #[actix_rt::test]
+    async fn test_get_city_models() {
+
+        let app_state = AppState::new().await;
+        let _ = env_logger::builder().is_test(true).try_init();
+        let mut app = test::init_service(
+            App::new()
+                .app_data(actix_web::web::Data::new(app_state.clone()))
+                .configure(config_user_routes),
+        ).await;
+        let req = test::TestRequest::get().uri("/model/get_city_models/1").to_request();
+        let resp = test::call_service(&mut app, req).await;
+        println!("{:?}", &resp);
+        println!("{:?}", &resp.response().body());
+        assert!(resp.status().is_success());
+    }
+
+    #[actix_rt::test]
+    async fn test_get_model_by_id() {
+        let app_state = AppState::new().await;
+        let _ = env_logger::builder().is_test(true).try_init();
+        let mut app = test::init_service(
+            App::new()
+                .app_data(actix_web::web::Data::new(app_state.clone()))
+                .configure(config_user_routes),
+        ).await;
+        let req = test::TestRequest::get().uri("/model/get_model_by_id/886").to_request();
         let resp = test::call_service(&mut app, req).await;
         println!("{:?}", &resp);
         println!("{:?}", &resp.response().body());

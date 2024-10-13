@@ -1,10 +1,10 @@
+use crate::dao::CityDao;
 use crate::models::request_models_dto::ExtractContourRequestData;
 use crate::models::ModelResponse;
 use crate::pool::app_state::DbPool;
 use crate::service::FileManager;
-use std::error::Error;
 use base64::Engine;
-use crate::dao::CityDao;
+use std::error::Error;
 
 pub struct ModelApiIntegrate;
 
@@ -13,31 +13,41 @@ impl ModelApiIntegrate {
     pub async fn extract_contours(
         image_upload: &ExtractContourRequestData,
         pool: &crate::pool::app_state::DbPool,
-    ) -> Result<(String,f64,f64), String> {
+    ) -> Result<(String, f64, f64), String> {
         // Extract contours from the uploaded image
         let mut extracted_contours = crate::service::extract_contour::ExtractContour::new();
         let contours = extracted_contours
             .extract_contour_api(image_upload)
             .expect("Failed to extract contours");
         //从contours中提取image_width和image_height和city_id
-        let image_width=contours["image_width"].as_f64().unwrap();
-        let image_height=contours["image_height"].as_f64().unwrap();
-        let city_id=contours["city_id"].as_i64().unwrap();
+        let image_width = contours["image_width"].as_f64().unwrap();
+        let image_height = contours["image_height"].as_f64().unwrap();
+        let city_id = contours["city_id"].as_i64().unwrap();
         //更新数据库中的city_id的image_width和image_height
-        CityDao::update_city_svg_height_and_svg_width(pool, city_id as i32, image_width as f32, image_height as f32).unwrap();
+        CityDao::update_city_svg_height_and_svg_width(
+            pool,
+            city_id as i32,
+            image_width as f32,
+            image_height as f32,
+        )
+            .unwrap();
 
         //处理轮廓为svg格式，并持久化，并且做为返回值
         let svg = Self::contours_to_svg(&contours).expect("Failed to save contours as SVG");
         //返回轮廓
         Ok(svg)
     }
-//svg高和宽也是参数
-    pub fn contours_to_svg(contourn_points: &serde_json::Value) -> Result<(String,f64,f64), Box<dyn Error>> {
-        let svg_width=contourn_points["image_width"].as_f64().unwrap();
-        let svg_height=contourn_points["image_height"].as_f64().unwrap();
+    //svg高和宽也是参数
+    pub fn contours_to_svg(
+        contourn_points: &serde_json::Value,
+    ) -> Result<(String, f64, f64), Box<dyn Error>> {
+        let svg_width = contourn_points["image_width"].as_f64().unwrap();
+        let svg_height = contourn_points["image_height"].as_f64().unwrap();
 
-    let mut svg_content =
-            String::from(format!(r#"<svg viewBox="0 0 {} {}" xmlns="http://www.w3.org/2000/svg">"#, svg_width, svg_height));
+        let mut svg_content = String::from(format!(
+            r#"<svg viewBox="0 0 {} {}" xmlns="http://www.w3.org/2000/svg">"#,
+            svg_width, svg_height
+        ));
 
         if let Some(contours) = contourn_points["contours"].as_array() {
             for (index, contour) in contours.iter().enumerate() {
@@ -67,7 +77,7 @@ impl ModelApiIntegrate {
 
         svg_content.push_str("</svg>");
 
-        Ok((svg_content,svg_width,svg_height))
+        Ok((svg_content, svg_width, svg_height))
     }
 
     //轮廓提取之后，接收用户的分组信息，将分组信息持久化到数据库中
@@ -128,9 +138,15 @@ impl ModelApiIntegrate {
         path_groups: &crate::models::request_models_dto::PathGroups,
         pool: &DbPool,
     ) -> Result<ModelResponse, Box<dyn Error>> {
+        //检测path_groups中的子轮廓数量是否大于0
+        if path_groups.path_groups.len() == 0 {
+            return Err("No path groups provided".into());
+        }
         //构建一个向量，存储每一个path_group的obj模型，最终做为返回值
         let mut models = Vec::new();
-        let  (svg_height, svg_width)=CityDao::get_city_svg_height_and_svg_width(pool, path_groups.path_groups[0].city_id).unwrap();
+        let (svg_height, svg_width) =
+            CityDao::get_city_svg_height_and_svg_width(pool, path_groups.path_groups[0].city_id)
+                .unwrap();
 
         //遍历每一个path_group，生成模型
         for path_group in &path_groups.path_groups {
@@ -144,49 +160,66 @@ impl ModelApiIntegrate {
             );
             let mut model_generate = crate::service::model_generate::ModelGenerate::new();
 
-            //将父轮廓和子轮廓提取出来
-        let parent_contour: Vec<(f64, f64)> = path_group
-    .parent_contour
-    .path
-    .iter()
-    .map(|point| (point.x as f64, point.y as f64))
-    .chain(std::iter::once((
-        path_group.parent_contour.path[0].x as f64,
-        path_group.parent_contour.path[0].y as f64,
-    )))
-    .collect();
-let child_contours: Vec<Vec<(f64, f64)>> = path_group
-    .child_contours
-    .iter()
-    .map(|contour| {
-        contour
-            .path
-            .iter()
-            .map(|point| (point.x as f64, point.y as f64))
-            .chain(std::iter::once((
-                contour.path[0].x as f64,
-                contour.path[0].y as f64,
-            )))
-            .collect()
-    })
-    .collect();
-            //提取高度参数
-            let height_params: Vec<f64> = std::iter::once(path_group.parent_contour.height as f64)
-                .chain(
-                    path_group
-                        .child_contours
-                        .iter()
-                        .map(|contour| contour.height as f64),
-                )
-                .collect();
+            //只有一个父亲轮廓的情况
+            // if (path_group.child_contours.len() == 0) {
+            //     let parent_contour: Vec<(f64, f64)> = path_group
+            //         .parent_contour
+            //         .path
+            //         .iter()
+            //         .map(|point| (point.x as f64, point.y as f64))
+            //         .chain(std::iter::once((
+            //             path_group.parent_contour.path[0].x as f64,
+            //             path_group.parent_contour.path[0].y as f64,
+            //         )))
+            //         .collect();
+            //
+            //     let height_params: Vec<f64> = vec![path_group.parent_contour.height as f64];
+            //     model_generate.genenate_model_one_parent_contour(&parent_contour, height_params[0]);
+            // } else {
+                //将父轮廓和子轮廓提取出来
+                let parent_contour: Vec<(f64, f64)> = path_group
+                    .parent_contour
+                    .path
+                    .iter()
+                    .map(|point| (point.x as f64, point.y as f64))
+                    .chain(std::iter::once((
+                        path_group.parent_contour.path[0].x as f64,
+                        path_group.parent_contour.path[0].y as f64,
+                    )))
+                    .collect();
+                let child_contours: Vec<Vec<(f64, f64)>> = path_group
+                    .child_contours
+                    .iter()
+                    .map(|contour| {
+                        contour
+                            .path
+                            .iter()
+                            .map(|point| (point.x as f64, point.y as f64))
+                            .chain(std::iter::once((
+                                contour.path[0].x as f64,
+                                contour.path[0].y as f64,
+                            )))
+                            .collect()
+                    })
+                    .collect();
+                //提取高度参数
+                let height_params: Vec<f64> = std::iter::once(path_group.parent_contour.height as f64)
+                    .chain(
+                        path_group
+                            .child_contours
+                            .iter()
+                            .map(|contour| contour.height as f64),
+                    )
+                    .collect();
 
-            //生成模型函数，存储到结构体变量中相关模型信息
-            model_generate.generate_model(
-                &parent_contour,
-                &parent_contour,
-                &child_contours,
-                &height_params,
-            );
+                //生成模型函数，存储到结构体变量中相关模型信息
+                model_generate.generate_model(
+                    &parent_contour,
+                    &parent_contour,
+                    &child_contours,
+                    &height_params,
+                );
+            // };
 
             //保存模型文件到目录中
             model_generate.save_model_file(model_save_path.as_str());
@@ -207,13 +240,14 @@ let child_contours: Vec<Vec<(f64, f64)>> = path_group
                 uuid::Uuid::new_v4()
             );
             //保存svg文件到svg和file数据库记录中
-            let (svg_id_pk, svg_file_id,) = crate::service::FileManager::save_new_svg_database(
+            let (svg_id_pk, svg_file_id) = crate::service::FileManager::save_new_svg_database(
                 path_group,
                 svg_file_name.as_str(),
                 pool,
                 svg_height.into(),
-                svg_width.into()
-            ).await?;
+                svg_width.into(),
+            )
+                .await?;
 
             let new_model = crate::models::entity::model::NewModel {
                 model_path: model_save_path.clone(),
@@ -242,4 +276,21 @@ let child_contours: Vec<Vec<(f64, f64)>> = path_group
 
         Ok(response)
     }
+    //同级模型合并，将同级模型合并成一个模型，因为一个建筑有多个模型，每个模型都是一个独立的模型，合并后针对整体的模型进行元数据存取
+    // pub fn merge_models(models: Vec<crate::models::ModelInfo>) -> Result<String, Box<dyn Error>> {
+    //     let mut merged_model = crate::service::model_merge::ModelMerge::new();
+    //     for model in models {
+    //         let obj_data = base64::engine::general_purpose::STANDARD.decode(model.model_data.as_bytes()).unwrap();
+    //         let obj_data = String::from_utf8(obj_data).unwrap();
+    //         merged_model.add_model(&obj_data);
+    //     }
+    //     let merged_model_path = format!(
+    //         "data/merged_models/model_{}_{}.obj",
+    //         chrono::Utc::now().timestamp(),
+    //         uuid::Uuid::new_v4()
+    //     );
+    //     merged_model.save_merged_model(merged_model_path.as_str());
+    //
+    //     Ok(merged_model_path)
+    // }
 }

@@ -43,7 +43,7 @@ pub fn establish_connection() -> DbPool {
 
 pub async fn establish_redis_pool() -> bb8::Pool<bb8_redis::RedisConnectionManager> {
     dotenv().ok();
-  let redis_url = "redis://:123456@localhost:6379".to_string();
+  let redis_url = "redis://:123456@8.222.253.40:6379".to_string();
     let manager = bb8_redis::RedisConnectionManager::new(redis_url)
         .expect("Failed to create Redis connection manager.");
     println!("redis数据库连接成功");
