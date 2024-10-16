@@ -1,1 +1,0 @@
-Pin<Box<(dyn futures_util::Future<Output = std::result::Result<ExtractContourRequestData, actix_web::Error>> + std::marker::Send + 'static)>>

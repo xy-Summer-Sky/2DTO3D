@@ -1,1 +1,0 @@
-&mut impl futures_util::Future<Output = std::result::Result<bb8::PooledConnection<'_, bb8_redis::RedisConnectionManager>, RunError<<bb8_redis::RedisConnectionManager as bb8::ManageConnection>::Error>>>

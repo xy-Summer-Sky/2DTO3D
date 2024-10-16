@@ -1,1 +1,0 @@
-Collect<futures_util::stream::Map<impl futures_util::Stream<Item = std::result::Result<actix_web::web::Bytes, actix_web::Error>>, {closure@src\controllers\upload_controller.rs:21:13: 21:20}>, std::result::Result<Vec<actix_web::web::Bytes>, _>>

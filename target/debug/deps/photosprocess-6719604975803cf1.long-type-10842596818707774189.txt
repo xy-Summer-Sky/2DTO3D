@@ -1,1 +1,0 @@
-futures_util::future::MapErr<impl futures_util::Future<Output = std::result::Result<i32, std::string::String>>, {closure@src\service\file_manager.rs:249:18: 249:21}>

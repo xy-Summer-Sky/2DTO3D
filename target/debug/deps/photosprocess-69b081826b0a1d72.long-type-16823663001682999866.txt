@@ -1,1 +1,0 @@
-fn({type error}, actix_web::web::Data<AppState>) -> impl futures_util::Future<Output = impl Responder> {<upload_image as HttpServiceFactory>::register::upload_image}

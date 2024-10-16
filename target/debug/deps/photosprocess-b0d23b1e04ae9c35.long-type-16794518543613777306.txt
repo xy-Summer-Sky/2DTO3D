@@ -1,1 +1,0 @@
-futures_util::future::MapErr<impl futures_util::Future<Output = std::result::Result<impl futures_util::Stream<Item = std::result::Result<actix_web::web::Bytes, actix_web::Error>>, std::string::String>>, {closure@src\service\file_manager.rs:126:22: 126:25}>
