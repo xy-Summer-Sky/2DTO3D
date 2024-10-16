@@ -43,4 +43,8 @@ out/
 
 photosprocess/target/
 node_modules
-*.rlib
+
+
+# Ignore target directory and its subdirectories
+target/
+
