@@ -11,3 +11,5 @@ pub mod config;
 mod models;
 pub mod schema;
 mod utils;
+mod api_doc;
+pub use api_doc::ApiDoc;

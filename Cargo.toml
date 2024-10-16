@@ -4,6 +4,8 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+utoipa = { version = "5.0.0", features = ["actix_extras"] }
+utoipa-swagger-ui = { version = "8.0.0", features = ["actix-web"] }
 bb8 = "0.8.5"
 bb8-redis = "0.17.0"
 r2d2 = { version = "0.8.10", default-features = true }

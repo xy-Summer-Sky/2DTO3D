@@ -2,6 +2,7 @@
 mod model_controller_tests {
     use actix_web::{test, web, App};
     use photosprocess::config::routes::config_user_routes;
+    use photosprocess::controllers::model_controller::{get_city_ids_by_user_id, get_model_ids};
     use photosprocess::pool::app_state::AppState;
 
     #[actix_rt::test]
@@ -247,20 +248,19 @@ mod model_controller_tests {
         assert!(resp.status().is_success());
     }
 
-
-    use photosprocess::controllers::model_controller::{get_city_models, get_model_by_id};
-
     #[actix_rt::test]
     async fn test_get_city_models() {
-
         let app_state = AppState::new().await;
         let _ = env_logger::builder().is_test(true).try_init();
         let mut app = test::init_service(
             App::new()
                 .app_data(actix_web::web::Data::new(app_state.clone()))
                 .configure(config_user_routes),
-        ).await;
-        let req = test::TestRequest::get().uri("/model/get_city_models/1").to_request();
+        )
+        .await;
+        let req = test::TestRequest::get()
+            .uri("/model/get_city_models/1")
+            .to_request();
         let resp = test::call_service(&mut app, req).await;
         println!("{:?}", &resp);
         println!("{:?}", &resp.response().body());
@@ -275,8 +275,49 @@ mod model_controller_tests {
             App::new()
                 .app_data(actix_web::web::Data::new(app_state.clone()))
                 .configure(config_user_routes),
-        ).await;
-        let req = test::TestRequest::get().uri("/model/get_model_by_id/886").to_request();
+        )
+        .await;
+        let req = test::TestRequest::get()
+            .uri("/model/get_model_by_id/886")
+            .to_request();
+        let resp = test::call_service(&mut app, req).await;
+        println!("{:?}", &resp);
+        println!("{:?}", &resp.response().body());
+        assert!(resp.status().is_success());
+    }
+
+    #[actix_rt::test]
+    async fn test_get_model_ids() {
+        let app_state = AppState::new().await;
+        let _ = env_logger::builder().is_test(true).try_init();
+        let mut app = test::init_service(
+            App::new()
+                .app_data(actix_web::web::Data::new(app_state.clone()))
+                .configure(config_user_routes),
+        )
+            .await;
+        let req = test::TestRequest::get()
+            .uri("/model/get_model_ids/1")
+            .to_request();
+        let resp = test::call_service(&mut app, req).await;
+        println!("{:?}", &resp);
+        println!("{:?}", &resp.response().body());
+        assert!(resp.status().is_success());
+    }
+
+    #[actix_rt::test]
+    async fn test_get_city_ids_by_user_id() {
+        let app_state = AppState::new().await;
+        let _ = env_logger::builder().is_test(true).try_init();
+        let mut app = test::init_service(
+            App::new()
+                .app_data(actix_web::web::Data::new(app_state.clone()))
+                .configure(config_user_routes),
+        )
+            .await;
+        let req = test::TestRequest::get()
+            .uri("/model/get_city_ids_by_user_id/1")
+            .to_request();
         let resp = test::call_service(&mut app, req).await;
         println!("{:?}", &resp);
         println!("{:?}", &resp.response().body());

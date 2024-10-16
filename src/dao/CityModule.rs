@@ -108,4 +108,14 @@ impl CityDao {
             ))
             .execute(&mut conn)
     }
+
+    pub fn get_city_ids_by_user_id(pool: &DbPool, user_id: i32) -> QueryResult<Vec<i32>> {
+        let mut conn = pool
+            .get()
+            .expect("Failed to get a connection from the pool");
+        cities::table
+            .filter(cities::user_id.eq(user_id))
+            .select(cities::id)
+            .load(&mut conn)
+    }
 }

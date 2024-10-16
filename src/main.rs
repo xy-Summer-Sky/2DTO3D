@@ -5,9 +5,10 @@ use actix_web::cookie::Key;
 use actix_web::middleware::Logger;
 use actix_web::{web, App, HttpServer};
 use photosprocess::pool::app_state::AppState;
-use photosprocess::service::SessionData;
-use std::env;
 use svg::node::NodeClone;
+use utoipa_swagger_ui::SwaggerUi;
+use utoipa::OpenApi;
+use photosprocess::ApiDoc;
 
 #[actix_rt::main]
 async fn main() -> actix_web::Result<()> {
@@ -15,6 +16,7 @@ async fn main() -> actix_web::Result<()> {
     let redis_store = RedisSessionStore::new(redis_url).await.unwrap();
     let secret_key = Key::generate();
     let app_state = AppState::new().await;
+    let openapi = ApiDoc::openapi();
     HttpServer::new(move || {
         App::new()
 
@@ -38,6 +40,8 @@ async fn main() -> actix_web::Result<()> {
                     .build(),
             )
             .configure(photosprocess::config::routes::config_user_routes)
+            .service(SwaggerUi::new("/swagger-ui/{_:.*}").url("/api-doc/openapi.json", openapi.clone()))
+
     })
     .bind("0.0.0.0:8081")?
     .run()

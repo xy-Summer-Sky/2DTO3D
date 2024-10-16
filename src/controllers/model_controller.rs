@@ -1,5 +1,5 @@
 use crate::pool::app_state::AppState;
-use crate::service::{FileManager, ModelsManagement, SessionData};
+use crate::service::{CitiesManagement, FileManager, ModelsManagement, SessionData};
 use actix_web::{get, post, web, HttpRequest, HttpResponse, Responder};
 use r2d2::Pool;
 use r2d2_redis::RedisConnectionManager;
@@ -13,6 +13,8 @@ pub fn config(cfg: &mut web::ServiceConfig) {
     cfg.service(build_model);
     cfg.service(get_city_models);
     cfg.service(get_model_by_id);
+    cfg.service(get_model_ids);
+    cfg.service(get_city_ids_by_user_id);
 }
 
 /// ### `GET /new_city/{city_name}/{user_id}`
@@ -319,4 +321,31 @@ pub async fn get_model_by_id(
         Err(e) => HttpResponse::InternalServerError().body(format!("Failed to get model by id: {}", e)),
     }
 }
+
+#[get("/get_model_ids/{city_id}")]
+pub async fn get_model_ids(
+    app_state: web::Data<AppState>,path:web::Path<i32>)
+    -> impl Responder {
+    let pool = &app_state.pool;
+    let city_id = path.into_inner();
+    match ModelsManagement::get_model_ids_by_city_id(&pool, city_id).await{
+        Ok(models) => HttpResponse::Ok().json(models),
+        Err(e) => HttpResponse::InternalServerError().body(format!("Failed to get city models: {}", e)),
+    }
+
+}
+
+
+#[get("/get_city_ids_by_user_id/{model_id}")]
+pub async fn get_city_ids_by_user_id(
+    app_state: web::Data<AppState>,path:web::Path<i32>)
+    -> impl Responder {
+    let pool = &app_state.pool;
+    let user_id = path.into_inner();
+    match CitiesManagement::get_city_ids_by_user_id(&pool, user_id) {
+        Ok(models) => HttpResponse::Ok().json(models),
+        Err(e) => HttpResponse::InternalServerError().body(format!("Failed to get city models: {}", e)),
+    }
+}
+
 

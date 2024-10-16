@@ -54,4 +54,5 @@ impl ModelDao {
             .filter(models::city_id.eq(city_id))
             .load(&mut conn)
     }
+
 }
