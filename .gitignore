@@ -43,3 +43,4 @@ out/
 
 photosprocess/target/
 node_modules
+*.rlib
