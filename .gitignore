@@ -41,8 +41,8 @@ out/
 *.rlib
 *.mp4
 
-photosprocess/target/
-node_modules
+/test/
+/node_modules
 
 
 # Ignore target directory and its subdirectories
