@@ -22,16 +22,18 @@ impl AppState {
 }
 pub fn establish_connection() -> DbPool {
     dotenv().ok();
-    let database_url = if env::var("ENVIRONMENT").unwrap_or_else(|_| "DEVELOPMENT".to_string())
-        == "PRODUCTION"
-    {
-        env::var("PRODUCTION_DATABASE_URL").unwrap_or_else(|_| {
-            "mysql://members:Helloworld66##@localhost:3306/3dRender".to_string()
-        })
-    } else {
-        env::var("DATABASE_URL")
-            .unwrap_or_else(|_| "mysql://members:helloworld@8.222.253.40:3306/3dRender".to_string())
-    };
+    let database_url =
+       "mysql://members:Helloworld66%23%23@localhost:3306/3dRender".to_string();
+    // let database_url = if env::var("ENVIRONMENT").unwrap_or_else(|_| "DEVELOPMENT".to_string())
+    //     == "PRODUCTION"
+    // {
+    //     env::var("PRODUCTION_DATABASE_URL").unwrap_or_else(|_| {
+    //         "mysql://members:Helloworld66##@localhost:3306/3dRender".to_string()
+    //     })
+    // } else {
+    //     env::var("DATABASE_URL")
+    //         .unwrap_or_else(|_| "mysql://members:Helloworld66##@47.84.72.144:3306/3dRender".to_string())
+    // };
     let manager = ConnectionManager::<MysqlConnection>::new(database_url);
     println!("mysql数据库连接成功");
     Pool::builder()
@@ -43,7 +45,7 @@ pub fn establish_connection() -> DbPool {
 
 pub async fn establish_redis_pool() -> bb8::Pool<bb8_redis::RedisConnectionManager> {
     dotenv().ok();
-  let redis_url = "redis://:123456@8.222.253.40:6379".to_string();
+    let redis_url = "redis://:123456@localhost:6379".to_string();
     let manager = bb8_redis::RedisConnectionManager::new(redis_url)
         .expect("Failed to create Redis connection manager.");
     println!("redis数据库连接成功");

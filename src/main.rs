@@ -12,7 +12,7 @@ use photosprocess::ApiDoc;
 
 #[actix_rt::main]
 async fn main() -> actix_web::Result<()> {
-    let redis_url = "redis://:123456@8.222.253.40:6379".to_string();
+    let redis_url = "redis://:123456@localhost:6379".to_string();
     let redis_store = RedisSessionStore::new(redis_url).await.unwrap();
     let secret_key = Key::generate();
     let app_state = AppState::new().await;
