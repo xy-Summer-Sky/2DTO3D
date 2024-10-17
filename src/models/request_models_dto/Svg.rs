@@ -3,20 +3,21 @@ use std::fs::File;
 use std::io::Write;
 // src/models/request_models_dto/Svg.rs
 use serde::{Deserialize, Serialize};
+use utoipa::ToSchema;
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize,ToSchema)]
 pub struct Point {
     pub x: f32,
     pub y: f32,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize,ToSchema)]
 pub struct Contour {
     pub path: Vec<Point>,
     pub height: f32,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize,ToSchema)]
 pub struct PathGroup {
     pub city_id: i32,
     pub user_id: i32,
@@ -25,7 +26,7 @@ pub struct PathGroup {
     pub image_id:i32
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize,ToSchema)]
 pub struct PathGroups {
     pub session_id: String,
     pub path_groups: Vec<PathGroup>,

@@ -1,8 +1,10 @@
+use crate::models::{ModelResponse, SingleModelResponse};
 use crate::pool::app_state::AppState;
 use crate::service::{CitiesManagement, FileManager, ModelsManagement, SessionData};
 use actix_web::{get, post, web, HttpRequest, HttpResponse, Responder};
 use r2d2::Pool;
 use r2d2_redis::RedisConnectionManager;
+use crate::models::request_models_dto::{ExtractContourRequestData, ImageUpload, PathGroups};
 
 pub type RedisPool = Pool<RedisConnectionManager>;
 
@@ -38,6 +40,18 @@ pub fn config(cfg: &mut web::ServiceConfig) {
 /// **Response Codes:**
 /// - `200 OK`: City created successfully.
 /// - `500 Internal Server Error`: Failed to create city.
+#[utoipa::path(
+    get,
+    path = "/model/new_city/{city_name}/{user_id}",
+   responses(
+    (status = 200, description = "City created successfully", body = (i32, String), example = json!({"message": "New city: test_city", "city_id": 1})),
+    (status = 500, description = "Internal server error", body = String, example = json!("Failed to create city"))
+),
+    params(
+        ("city_name" = String, Path, description = "City name"),
+        ("user_id" = i32, Path, description = "User ID")
+    )
+)]
 #[get("/new_city/{city_name}/{user_id}")]
 pub async fn new_city(
     app_state: web::Data<AppState>,
@@ -47,7 +61,7 @@ pub async fn new_city(
     let redis_pool = &app_state.redis_pool;
     let (city_name, user_id) = path.into_inner();
     match FileManager::new_city_and_new_directory(&pool, &user_id, &city_name).await {
-        Ok(_) => HttpResponse::Ok().body(format!("New city: {}", city_name)),
+        Ok(city_id) => HttpResponse::Ok().body(format!("New city: {}, city_id: {}", city_name, city_id)),
         Err(e) => HttpResponse::InternalServerError().body(format!("Failed to create city: {}", e)),
     }
 }
@@ -85,6 +99,18 @@ pub async fn new_city(
 /// - `200 OK`: Image uploaded successfully.
 /// - `400 Bad Request`: Missing or invalid parameters.
 /// - `500 Internal Server Error`: Failed to upload image.
+#[utoipa::path(
+    post,
+    path = "/model/upload_image",
+    responses(
+        (status = 200, description = "Image uploaded successfully", body = (i32, i32, i32), example = json!({"user_id": 123, "image_id": 456, "city_id": 789})),
+        (status = 500, description = "Internal server error")
+    ),
+    request_body(
+        content = ImageUpload,
+        description = "Image upload data"
+    )
+)]
 #[post("/upload_image")]
 pub async fn upload_image(
     image_upload: crate::models::request_models_dto::ImageUpload,
@@ -182,6 +208,18 @@ pub async fn upload_image(
 /// - `200 OK`: Contours extracted successfully.
 /// - `400 Bad Request`: Missing or invalid parameters.
 /// - `500 Internal Server Error`: Failed to extract contours.
+#[utoipa::path(
+    post,
+    path = "/model/extract_contours",
+    responses(
+        (status = 200, description = "Contours extracted successfully", body = (i32, i32, i32, i32, String), example = json!({"user_id": 123, "image_id": 456, "city_id": 789, "file_id": 101112, "svg_content": "<svg>...</svg>"})),
+        (status = 500, description = "Internal server error")
+    ),
+    request_body(
+        content = ExtractContourRequestData,
+        description = "Data for extracting contours"
+    )
+)]
 #[post("/extract_contours")]
 pub async fn extract_contours(
     req: HttpRequest,
@@ -189,15 +227,14 @@ pub async fn extract_contours(
     image_upload: crate::models::request_models_dto::ExtractContourRequestData,
 ) -> impl Responder {
     let pool = &app_state.pool;
-    let (svg,svg_with,svg_height) = match crate::service::ModelApiIntegrate::extract_contours(&image_upload, &pool).await
-    {
-        Ok(svg) => svg,
-        Err(e) => {
-            return HttpResponse::InternalServerError()
-                .body(format!("Failed to extract contours: {}", e));
-        }
-    };
-
+    let (svg, svg_with, svg_height) =
+        match crate::service::ModelApiIntegrate::extract_contours(&image_upload, &pool).await {
+            Ok(svg) => svg,
+            Err(e) => {
+                return HttpResponse::InternalServerError()
+                    .body(format!("Failed to extract contours: {}", e));
+            }
+        };
 
     let session_id = req
         .cookie("session_id")
@@ -274,8 +311,20 @@ pub async fn extract_contours(
 ///     ]
 /// }
 /// ```
+#[utoipa::path(
+    post,
+    path = "/model/build_model",
+    responses(
+        (status = 200, description = "Model built successfully", body = ModelResponse),
+        (status = 500, description = "Internal server error")
+    ),
+    request_body(
+        content = PathGroups,
+        description = "Path groups for model building"
+    )
+)]
 #[post("/build_model")]
-pub async fn build_model(
+pub(crate) async fn build_model(
     req: HttpRequest,
     path_groups: web::Json<crate::models::request_models_dto::PathGroups>,
     app_state: web::Data<AppState>,
@@ -297,6 +346,18 @@ pub async fn build_model(
     HttpResponse::Ok().json(models)
 }
 
+
+#[utoipa::path(
+    get,
+    path = "/model/get_city_models/{city_id}",
+    responses(
+       (status = 200, description = "City models retrieved successfully", body = [ (i32, String) ], example = json!([(1, "obj file data here")])),
+        (status = 500, description = "Internal server error")
+    ),
+    params(
+        ("city_id" = i32, Path, description = "City ID")
+    )
+)]
 #[get("/get_city_models/{city_id}")]
 pub async fn get_city_models(
     app_state: web::Data<AppState>,
@@ -306,46 +367,87 @@ pub async fn get_city_models(
     let city_id = path.into_inner();
     match ModelsManagement::get_city_models_by_city_id(&pool, city_id).await {
         Ok(models) => HttpResponse::Ok().json(models),
-        Err(e) => HttpResponse::InternalServerError().body(format!("Failed to get city models: {}", e)),
+        Err(e) => {
+            HttpResponse::InternalServerError().body(format!("Failed to get city models: {}", e))
+        }
     }
 }
 
+#[utoipa::path(
+    get,
+    path = "/model/get_model_by_id/{model_id}",
+    responses(
+        (status = 200, description = "Model retrieved successfully",body=SingleModelResponse),
+        (status = 500, description = "Internal server error")
+    ),
+    params(
+        ("model_id" = i32, Path, description = "Model ID")
+    )
+)]
 #[get("/get_model_by_id/{model_id}")]
 pub async fn get_model_by_id(
     app_state: web::Data<AppState>,
-    path:web::Path<i32>) -> impl Responder {
+    path: web::Path<i32>,
+) -> impl Responder {
     let pool = &app_state.pool;
     let model_id = path.into_inner();
     match ModelsManagement::get_model_by_id(&pool, model_id).await {
-        Ok(model) => HttpResponse::Ok().json(model),
-        Err(e) => HttpResponse::InternalServerError().body(format!("Failed to get model by id: {}", e)),
+        Ok(model) => {
+            let model_response = SingleModelResponse::new(model.0, model.1);
+            HttpResponse::Ok().json(model_response)
+        }
+        Err(e) => {
+            HttpResponse::InternalServerError().body(format!("Failed to get model by id: {}", e))
+        }
     }
 }
 
+#[utoipa::path(
+    get,
+    path = "/model/get_model_ids/{city_id}",
+    responses(
+       (status = 200, description = "Model IDs retrieved successfully", body = [i32], example = json!([1, 2, 3])),
+        (status = 500, description = "Internal server error")
+    ),
+    params(
+        ("city_id" = i32, Path, description = "City ID")
+    )
+)]
 #[get("/get_model_ids/{city_id}")]
-pub async fn get_model_ids(
-    app_state: web::Data<AppState>,path:web::Path<i32>)
-    -> impl Responder {
+pub async fn get_model_ids(app_state: web::Data<AppState>, path: web::Path<i32>) -> impl Responder {
     let pool = &app_state.pool;
     let city_id = path.into_inner();
-    match ModelsManagement::get_model_ids_by_city_id(&pool, city_id).await{
+    match ModelsManagement::get_model_ids_by_city_id(&pool, city_id).await {
         Ok(models) => HttpResponse::Ok().json(models),
-        Err(e) => HttpResponse::InternalServerError().body(format!("Failed to get city models: {}", e)),
+        Err(e) => {
+            HttpResponse::InternalServerError().body(format!("Failed to get city models: {}", e))
+        }
     }
-
 }
 
 
+#[utoipa::path(
+    get,
+    path = "/model/get_city_ids_by_user_id/{user_id}",
+    responses(
+        (status = 200, description = "City IDs retrieved successfully",body=[i32]),
+        (status = 500, description = "Internal server error")
+    ),
+    params(
+        ("user_id" = i32, Path, description = "User ID")
+    )
+)]
 #[get("/get_city_ids_by_user_id/{model_id}")]
 pub async fn get_city_ids_by_user_id(
-    app_state: web::Data<AppState>,path:web::Path<i32>)
-    -> impl Responder {
+    app_state: web::Data<AppState>,
+    path: web::Path<i32>,
+) -> impl Responder {
     let pool = &app_state.pool;
     let user_id = path.into_inner();
     match CitiesManagement::get_city_ids_by_user_id(&pool, user_id) {
         Ok(models) => HttpResponse::Ok().json(models),
-        Err(e) => HttpResponse::InternalServerError().body(format!("Failed to get city models: {}", e)),
+        Err(e) => {
+            HttpResponse::InternalServerError().body(format!("Failed to get city models: {}", e))
+        }
     }
 }
-
-

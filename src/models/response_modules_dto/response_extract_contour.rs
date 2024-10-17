@@ -1,4 +1,5 @@
 use serde::{Serialize, Deserialize};
+use utoipa::ToSchema;
 
 #[derive(Serialize, Deserialize, Debug)]
 struct Point {
@@ -135,14 +136,16 @@ struct Contours {
 
 
 /// Example response format for `ModelResponse`:
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug,ToSchema)]
 pub struct ModelResponse {
     pub(crate) user_id: i32,
     pub(crate) city_id: i32,
     pub(crate) models: Vec<ModelInfo>,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+
+
+#[derive(Serialize, Deserialize, Debug,ToSchema)]
 pub struct ModelInfo {
     pub model_id: i32,
     pub model_data: String, // Base64 encoded .obj data

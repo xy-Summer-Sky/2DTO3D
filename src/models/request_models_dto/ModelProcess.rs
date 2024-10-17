@@ -7,12 +7,12 @@ use actix_web::error::ErrorBadRequest;
 use futures::StreamExt; // 导入 StreamExt 用于流的处理
 use serde::Deserialize;
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug,ToSchema)]
 pub struct UserInfo {
     pub user_id: i32,
     pub city_id: i32,
 }
-
+#[derive(Deserialize, Debug,ToSchema)]
 pub struct ImageUpload {
     pub cookie: Option<String>,
     pub user_info: UserInfo,
@@ -120,7 +120,7 @@ impl std::str::FromStr for Click {
 use futures::future::{ready}; // 确保引入了正确的 Futures 工具
 
 
-#[derive(Deserialize,Serialize)]
+#[derive(Deserialize,Serialize,ToSchema)]
 pub struct ExtractContourRequestData {
     pub(crate) user_id: i32,
     pub(crate) city_id: i32,
@@ -130,7 +130,7 @@ pub struct ExtractContourRequestData {
 
 }
 
-#[derive(Deserialize,Serialize)]
+#[derive(Deserialize,Serialize,ToSchema)]
 struct Click {
     x: i32,
     y: i32,
@@ -180,6 +180,7 @@ use std::sync::Arc;
 
 
 use futures::future::LocalBoxFuture;
+use utoipa::ToSchema;
 
 impl FromRequest for ExtractContourRequestData {
     type Error = Error;

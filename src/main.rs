@@ -12,7 +12,7 @@ use photosprocess::ApiDoc;
 
 #[actix_rt::main]
 async fn main() -> actix_web::Result<()> {
-    let redis_url = "redis://:123456@localhost:6379".to_string();
+    let redis_url = "redis://:123456@8.222.253.40:6379".to_string();
     let redis_store = RedisSessionStore::new(redis_url).await.unwrap();
     let secret_key = Key::generate();
     let app_state = AppState::new().await;
@@ -39,8 +39,9 @@ async fn main() -> actix_web::Result<()> {
                     .cookie_secure(true)
                     .build(),
             )
-            .configure(photosprocess::config::routes::config_user_routes)
             .service(SwaggerUi::new("/swagger-ui/{_:.*}").url("/api-doc/openapi.json", openapi.clone()))
+            .configure(photosprocess::config::routes::config_user_routes)
+
 
     })
     .bind("0.0.0.0:8081")?

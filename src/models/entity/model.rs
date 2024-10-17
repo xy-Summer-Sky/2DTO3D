@@ -2,7 +2,9 @@
 use crate::schema::models;
 use diesel::{Insertable, Queryable};
 use serde::{Deserialize, Serialize};
-#[derive(Insertable, Queryable, Serialize, Deserialize)]
+use utoipa::ToSchema;
+// use utoipa::PartialSchema;
+#[derive(Insertable, Queryable, Serialize, Deserialize,ToSchema)]
 #[diesel(table_name = models)]
 pub struct Model {
     pub id: i32,
@@ -21,3 +23,4 @@ pub struct NewModel {
     #[diesel(column_name = svg_id)]
     pub svg_id: Option<i32>,
 }
+

@@ -4,6 +4,9 @@ use photosprocess::config::routes::config_user_routes;
 // 根据实际模块路径调整
 use photosprocess::pool::app_state::{AppState, DbPool};
 use rand::Rng;
+use utoipa::OpenApi;
+use utoipa_swagger_ui::SwaggerUi;
+use photosprocess::ApiDoc;
 
 #[actix_rt::test]
 async fn test_verify_user_route() {
@@ -31,11 +34,13 @@ async fn test_verify_user_route() {
 }
 #[actix_rt::test]
 async fn test_register_user_route() {
+    let openapi = ApiDoc::openapi();
     let app_state = AppState::new().await;
     let _ = env_logger::builder().is_test(true).try_init();
     let mut app = test::init_service(
         App::new()
             .app_data(actix_web::web::Data::new(app_state.clone()))
+            .service(SwaggerUi::new("/swagger-ui/{_:.*}").url("/api-doc/openapi.json", openapi.clone()))
             .configure(config_user_routes),
     )
         .await;
@@ -48,7 +53,7 @@ async fn test_register_user_route() {
     //     .uri(&format!("/user/register/{}/{}", username, password))
     //     .to_request();
     let req = test::TestRequest::post()
-        .uri("/user/register/sxy/sxy")
+        .uri("/user/register/sxy3/sxy3")
         .to_request();
     let resp = test::call_service(&mut app, req).await;
     println!("Response status: {:?}", resp.status());
