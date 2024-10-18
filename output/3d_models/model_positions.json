@@ -1,0 +1,119 @@
+[
+  {
+    "model_path": "F:/CODE/GIThub/3DLab/3d_city/三角剖分及体模生成/Building2-模型.obj",
+    "position": [
+      828.0,
+      450.0,
+      0.0
+    ],
+    "rotation": [
+      0.0,
+      0.0,
+      210.0
+    ]
+  },
+  {
+    "model_path": "F:/CODE/GIThub/3DLab/3d_city/三角剖分及体模生成/Building2-模型.obj",
+    "position": [
+      1038.0,
+      450.0,
+      0.0
+    ],
+    "rotation": [
+      0.0,
+      0.0,
+      210.0
+    ]
+  },
+  {
+    "model_path": "F:/CODE/GIThub/3DLab/3d_city/三角剖分及体模生成/Building2-模型.obj",
+    "position": [
+      618.0,
+      660.0,
+      0.0
+    ],
+    "rotation": [
+      0.0,
+      0.0,
+      210.0
+    ]
+  },
+  {
+    "model_path": "F:/CODE/GIThub/3DLab/3d_city/三角剖分及体模生成/Building2-模型.obj",
+    "position": [
+      828.0,
+      660.0,
+      0.0
+    ],
+    "rotation": [
+      0.0,
+      0.0,
+      210.0
+    ]
+  },
+  {
+    "model_path": "F:/CODE/GIThub/3DLab/3d_city/三角剖分及体模生成/Building2-模型.obj",
+    "position": [
+      1038.0,
+      660.0,
+      0.0
+    ],
+    "rotation": [
+      0.0,
+      0.0,
+      210.0
+    ]
+  },
+  {
+    "model_path": "F:/CODE/GIThub/3DLab/3d_city/三角剖分及体模生成/Building2-模型.obj",
+    "position": [
+      1248.0,
+      660.0,
+      0.0
+    ],
+    "rotation": [
+      0.0,
+      0.0,
+      210.0
+    ]
+  },
+  {
+    "model_path": "F:/CODE/GIThub/3DLab/3d_city/三角剖分及体模生成/Building2-模型.obj",
+    "position": [
+      618.0,
+      870.0,
+      0.0
+    ],
+    "rotation": [
+      0.0,
+      0.0,
+      210.0
+    ]
+  },
+  {
+    "model_path": "F:/CODE/GIThub/3DLab/3d_city/三角剖分及体模生成/Building2-模型.obj",
+    "position": [
+      828.0,
+      870.0,
+      0.0
+    ],
+    "rotation": [
+      0.0,
+      0.0,
+      210.0
+    ]
+  },
+  {
+    "model_path": "F:/CODE/GIThub/3DLab/3d_city/三角剖分及体模生成/Building2-模型.obj",
+    "position": [
+      1038.0,
+      870.0,
+      0.0
+    ],
+    "rotation": [
+      0.0,
+      0.0,
+      210.0
+    ]
+  }
+]

@@ -1,0 +1,314 @@
+{
+  "黄色": {
+    "rgb": [
+      255,
+      255,
+      0
+    ],
+    "hex": "#FFFF00",
+    "hsv_range": [
+      [
+        25,
+        100,
+        100
+      ],
+      [
+        35,
+        255,
+        255
+      ]
+    ],
+    "model_path": "assets/models/default/objmodel/sports_facility.obj",
+    "side_length": 22.0,
+    "center_point": [
+      11.0,
+      11.0
+    ]
+  },
+  "橙色": {
+    "rgb": [
+      255,
+      165,
+      0
+    ],
+    "hex": "#FFA500",
+    "hsv_range": [
+      [
+        10,
+        100,
+        100
+      ],
+      [
+        25,
+        255,
+        255
+      ]
+    ],
+    "model_path": "assets/models/default/objmodel/office_building.obj",
+    "side_length": 16.5,
+    "center_point": [
+      8.25,
+      8.25
+    ]
+  },
+  "黑色": {
+    "rgb": [
+      0,
+      0,
+      0
+    ],
+    "hex": "#000000",
+    "hsv_range": [
+      [
+        0,
+        0,
+        0
+      ],
+      [
+        180,
+        255,
+        40
+      ]
+    ],
+    "model_path": "assets/models/default/objmodel/warehouse.obj",
+    "side_length": 66.0,
+    "center_point": [
+      33.0,
+      33.0
+    ]
+  },
+  "紫色": {
+    "rgb": [
+      128,
+      0,
+      128
+    ],
+    "hex": "#800080",
+    "hsv_range": [
+      [
+        130,
+        40,
+        40
+      ],
+      [
+        160,
+        255,
+        255
+      ]
+    ],
+    "model_path": "assets/models/default/objmodel/school.obj",
+    "side_length": 44.0,
+    "center_point": [
+      22.0,
+      22.0
+    ]
+  },
+  "绿色": {
+    "rgb": [
+      0,
+      255,
+      0
+    ],
+    "hex": "#00FF00",
+    "hsv_range": [
+      [
+        35,
+        100,
+        100
+      ],
+      [
+        85,
+        255,
+        255
+      ]
+    ],
+    "model_path": "assets/models/default/objmodel/park.obj",
+    "side_length": 27.5,
+    "center_point": [
+      13.75,
+      13.75
+    ]
+  },
+  "灰色": {
+    "rgb": [
+      128,
+      128,
+      128
+    ],
+    "hex": "#808080",
+    "hsv_range": [
+      [
+        0,
+        0,
+        40
+      ],
+      [
+        0,
+        0,
+        60
+      ]
+    ],
+    "model_path": "assets/models/default/objmodel/factory.obj",
+    "side_length": 60.5,
+    "center_point": [
+      30.25,
+      30.25
+    ]
+  },
+  "褐色": {
+    "rgb": [
+      165,
+      42,
+      42
+    ],
+    "hex": "#A52A2A",
+    "hsv_range": [
+      [
+        15,
+        100,
+        40
+      ],
+      [
+        20,
+        255,
+        90
+      ]
+    ],
+    "model_path": "assets/models/default/objmodel/bridge.obj",
+    "side_length": 22.0,
+    "center_point": [
+      11.0,
+      11.0
+    ]
+  },
+  "青色": {
+    "rgb": [
+      0,
+      255,
+      255
+    ],
+    "hex": "#00FFFF",
+    "hsv_range": [
+      [
+        90,
+        100,
+        100
+      ],
+      [
+        130,
+        255,
+        255
+      ]
+    ],
+    "model_path": "assets/models/default/objmodel/apartment.obj",
+    "side_length": 33.0,
+    "center_point": [
+      16.5,
+      16.5
+    ]
+  },
+  "粉红色": {
+    "rgb": [
+      255,
+      192,
+      203
+    ],
+    "hex": "#FFC0CB",
+    "hsv_range": [
+      [
+        0,
+        100,
+        100
+      ],
+      [
+        255,
+        255,
+        255
+      ]
+    ],
+    "model_path": "assets/models/default/objmodel/hospital.obj",
+    "side_length": 49.5,
+    "center_point": [
+      24.75,
+      24.75
+    ]
+  },
+  "蓝色": {
+    "rgb": [
+      0,
+      0,
+      255
+    ],
+    "hex": "#0000FF",
+    "hsv_range": [
+      [
+        90,
+        50,
+        50
+      ],
+      [
+        130,
+        100,
+        100
+      ]
+    ],
+    "model_path": "assets/models/default/objmodel/villa.obj",
+    "side_length": 38.5,
+    "center_point": [
+      19.25,
+      19.25
+    ]
+  },
+  "白色": {
+    "rgb": [
+      255,
+      255,
+      255
+    ],
+    "hex": "#FFFFFF",
+    "hsv_range": [
+      [
+        0,
+        0,
+        70
+      ],
+      [
+        180,
+        10,
+        100
+      ]
+    ],
+    "model_path": "assets/models/default/objmodel/road.obj",
+    "side_length": 55.0,
+    "center_point": [
+      27.5,
+      27.5
+    ]
+  },
+  "红色": {
+    "rgb": [
+      255,
+      0,
+      0
+    ],
+    "hex": "#FF0000",
+    "hsv_range": [
+      [
+        0,
+        70,
+        50
+      ],
+      [
+        10,
+        255,
+        255
+      ]
+    ],
+    "model_path": "assets/models/default/objmodel/shopping_center.obj",
+    "side_length": 11.0,
+    "center_point": [
+      5.5,
+      5.5
+    ]
+  }
+}

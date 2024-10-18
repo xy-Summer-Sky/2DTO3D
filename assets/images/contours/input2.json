@@ -1,0 +1,40 @@
+{
+  "window": {
+    "width": 912,
+    "height": 1239
+  },
+  "location": {
+    "win_x": 0,
+    "win_y": 0
+  },
+  "right_clicks": [
+    {
+      "x": 776,
+      "y": 620,
+      "type": "parent"
+    },
+    {
+      "x": 687,
+      "y": 779,
+      "type": "children"
+    },
+    {
+      "x": 687,
+      "y": 779,
+      "type": "children"
+    },
+    {
+      "x": 687,
+      "y": 779,
+      "type": "children"
+    },
+    {
+      "x": 666,
+      "y": 636,
+      "type": "children"
+    }
+  ],
+  "zoom": 1,
+  "step": 0.1,
+  "image_path": "img_1.png"
+}

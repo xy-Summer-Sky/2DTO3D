@@ -1,0 +1,95 @@
+[package]
+name = "photosprocess"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+utoipa = { version = "5.0.0", features = ["actix_extras"] }
+utoipa-swagger-ui = { version = "8.0.0", features = ["actix-web"] }
+bb8 = "0.8.5"
+bb8-redis = "0.17.0"
+r2d2 = { version = "0.8.10", default-features = true }
+r2d2_redis = { version = "0.14.0", default-features = true }
+actix-rt = "2.5.0"
+bcrypt = "0.15.1"
+itertools = "0.13.0"
+geo-types="0.7.13"
+nalgebra = "0.33.0"
+delaunator = "1.0.2"
+plotters = "0.3.7"
+mysqlclient-sys = "0.4.1"
+diesel= { version = "2.2.4", features = ["mysql","r2d2","chrono"] }
+dotenv ={version = "0.15.0",default-features = true}
+image = { version = "0.25.2", features = ["jpeg","png","tiff"] }
+imageproc = { version = "0.25.0", features = ["property-testing"] }
+serde = { version = "1.0.204", features = ["derive"] }
+serde_json = "1.0.120"
+svg= "0.18.0"
+rusttype = "0.9.3"
+roxmltree = "0.20.0"
+unicode-segmentation = "1.11.0"
+serde_derive = "1.0.204"
+tobj = "4.0.2"
+actix-web = "4.8.0"
+clap= { version = "4.5.13", features = ["derive"] }
+tokio = { version = "1.39.2", features = ["full"] }
+actix-multipart = "0.7.2"
+futures-util = { version = "0.3.30", features = ["compat"] }
+sanitize-filename = "0.5.0"
+actix-cors="0.7.0"
+actix-files = "0.6.6"
+futures = "0.3.30"
+opencv = {version = "0.93.0", default-features = false,features = ["imgcodecs","imgproc","highgui","videoio"]}
+lazy_static = "1.5.0"
+anyhow = "1.0.86"
+cc = "1.1.8"
+gltf = "1.4.1"
+fbxcel = "0.9.0"
+fbxcel-dom = "0.0.10"
+gltf-json = "1.4.1"
+indexmap = "2.4.0"
+zip = "2.2.0"
+clang-sys = "1.8.1"
+base64 = "0.22.1"
+geo="0.28.0"
+chrono = { version = "0.4.38", features = ["serde"] }
+async-trait = "0.1.82"
+rand = "0.8.5"
+actix-redis= { version = "0.13.1+deprecated", features = ["actix-web","default"] }
+actix-session = { version = "0.10.1", features = ["redis-session","redis-pool"] }
+redis= { version = "0.27.2", features = ["aio","async-std-comp","connection-manager"] }
+actix-service = "2.0.2"
+futures-core = "0.3.30"
+uuid = { version = "1.10.0", features = ["v4"] }
+tokio-util = "0.7.11"
+bytes = "1.7.1"
+rudg = "0.1.1"
+ruml = "0.1.0"
+env_logger = "0.11.5"
+syn = { version = "2.0.79", features = ["full","visit"] }
+walkdir = "2.5.0"
+
+[lib]
+name = "photosprocess"
+path = "src/lib.rs"
+
+#[[bin]]
+#name="model_base_process"
+#path = "src/bin/model_base_process.rs"
+#
+#[[bin]]
+#name = "project_structure"
+#path = "src/bin/project_structure.rs"
+#
+#[[bin]]
+#name = "hsv_contour_detection"
+#path = "src/bin/hsv_contour_detection.rs"
+#
+#[[bin]]
+#name ="merge_model_fbx"
+#path = "src/bin/merge_model_fbx.rs"
+#
+#[[bin]]
+#name = "merge_model_gltf"
+#path = "src/bin/merge_model_gltf.rs"
+

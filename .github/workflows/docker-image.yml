@@ -1,0 +1,43 @@
+name: Docker Image CI
+on:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y curl build-essential llvm-14 clang-14 libclang-14-dev gcc pkg-config libopencv-dev
+
+      - name: Set up Rust
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain 1.80.1
+          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+
+      - name: Set environment variables
+        run: |
+          echo "LLVM_CONFIG_PATH=/usr/lib/llvm-14/bin/llvm-config" >> $GITHUB_ENV
+          echo "LIBCLANG_PATH=/usr/lib/llvm-14/lib" >> $GITHUB_ENV
+          echo "PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig" >> $GITHUB_ENV
+
+      - name: Build with Cargo
+        env:
+          LLVM_CONFIG_PATH: ${{ env.LLVM_CONFIG_PATH }}
+          LIBCLANG_PATH: ${{ env.LIBCLANG_PATH }}
+          PKG_CONFIG_PATH: ${{ env.PKG_CONFIG_PATH }}
+        run: |
+          . $HOME/.cargo/env
+          cargo build --release
+
+      - name: Build the Docker image
+        run: |
+          docker version
+          # Login to Alibaba Cloud Container Registry
+          docker login --username=${{ secrets.SUMMER }} --password=${{ secrets.TEST }} registry.ap-southeast-1.aliyuncs.com
+          # Build the Docker image using Dockerfile
+          docker build . --file Dockerfile --tag registry.ap-southeast-1.aliyuncs.com/3d_render/3d:latest
+          # Push the Docker image to the registry
+          docker push registry.ap-southeast-1.aliyuncs.com/3d_render/3d:latest

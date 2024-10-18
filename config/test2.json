@@ -1,0 +1,108 @@
+{
+  "红色": {
+    "rgb": [
+      255,
+      0,
+      0
+    ],
+    "hex": "#FF0000",
+    "hsv_range": [
+      [
+        0,
+        70,
+        50
+      ],
+      [
+        10,
+        255,
+        255
+      ]
+    ],
+    "model_path": "F:/CODE/GIThub/3DLab/3d_city/三角剖分及体模生成/Building2-模型.obj",
+    "side_length": 210.0,
+
+
+    "center_point": [
+      169.0,
+      164.5
+    ]
+  },
+  "绿色": {
+    "rgb": [
+      0,
+      255,
+      0
+    ],
+    "hex": "#00FF00",
+    "hsv_range": [
+      [
+        35,
+        100,
+        100
+      ],
+      [
+        85,
+        255,
+        255
+      ]
+    ],
+    "model_path": "F:/CODE/GIThub/3DLab/3d_city/三角剖分及体模生成/Building2-模型.obj",
+    "side_length": 210.0,
+    "center_point": [
+      169.0,
+      164.5
+    ]
+  },
+  "黄色": {
+    "rgb": [
+      255,
+      255,
+      0
+    ],
+    "hex": "#FFFF00",
+    "hsv_range": [
+      [
+        25,
+        100,
+        100
+      ],
+      [
+        35,
+        255,
+        255
+      ]
+    ],
+    "model_path": "F:/CODE/GIThub/3DLab/3d_city/三角剖分及体模生成/Building2-模型.obj",
+    "side_length": 210.0,
+    "center_point": [
+      169.0,
+      164.5
+    ]
+  },
+  "蓝色": {
+    "rgb": [
+      0,
+      0,
+      255
+    ],
+    "hex": "#0000FF",
+    "hsv_range": [
+      [
+        90,
+        50,
+        50
+      ],
+      [
+        130,
+        100,
+        100
+      ]
+    ],
+    "model_path": "F:/CODE/GIThub/3DLab/3d_city/三角剖分及体模生成/Building2-模型.obj",
+    "side_length": 210.0,
+    "center_point": [
+      169.0,
+      164.5
+    ]
+  }
+}

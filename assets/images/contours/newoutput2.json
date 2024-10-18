@@ -1,0 +1,129 @@
+{
+    "parent": {
+        "contour_points": [
+            {
+                "lon": 577,
+                "lat": 559,
+                "height": 100
+            },
+            {
+                "lon": 577,
+                "lat": 910,
+                "height": 100
+            },
+            {
+                "lon": 826,
+                "lat": 910,
+                "height": 100
+            },
+            {
+                "lon": 826,
+                "lat": 559,
+                "height": 100
+            }
+        ],
+        "height": 100
+    },
+    "children": [
+        {
+            "contour_points": [
+                {
+                    "lon": 618,
+                    "lat": 714,
+                    "height": 100
+                },
+                {
+                    "lon": 629,
+                    "lat": 881,
+                    "height": 100
+                },
+                {
+                    "lon": 797,
+                    "lat": 881,
+                    "height": 100
+                },
+                {
+                    "lon": 797,
+                    "lat": 718,
+                    "height": 100
+                }
+            ],
+            "height": 100
+        },
+        {
+            "contour_points": [
+                {
+                    "lon": 618,
+                    "lat": 714,
+                    "height": 100
+                },
+                {
+                    "lon": 629,
+                    "lat": 881,
+                    "height": 100
+                },
+                {
+                    "lon": 797,
+                    "lat": 881,
+                    "height": 100
+                },
+                {
+                    "lon": 797,
+                    "lat": 718,
+                    "height": 100
+                }
+            ],
+            "height": 100
+        },
+        {
+            "contour_points": [
+                {
+                    "lon": 618,
+                    "lat": 714,
+                    "height": 100
+                },
+                {
+                    "lon": 629,
+                    "lat": 881,
+                    "height": 100
+                },
+                {
+                    "lon": 797,
+                    "lat": 881,
+                    "height": 100
+                },
+                {
+                    "lon": 797,
+                    "lat": 718,
+                    "height": 100
+                }
+            ],
+            "height": 100
+        },
+        {
+            "contour_points": [
+                {
+                    "lon": 606,
+                    "lat": 592,
+                    "height": 100
+                },
+                {
+                    "lon": 606,
+                    "lat": 667,
+                    "height": 100
+                },
+                {
+                    "lon": 698,
+                    "lat": 667,
+                    "height": 100
+                },
+                {
+                    "lon": 698,
+                    "lat": 592,
+                    "height": 100
+                }
+            ],
+            "height": 100
+        }
+    ]
+}

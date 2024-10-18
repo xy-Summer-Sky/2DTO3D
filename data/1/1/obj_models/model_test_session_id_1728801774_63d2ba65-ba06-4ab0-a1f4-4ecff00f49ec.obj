@@ -1,0 +1,30 @@
+mtllib Building1.mtl
+o Building1
+v 10 50 10
+v 10 50 200
+v 200 50 200
+v 200 50 10
+v 10 50 10
+v 10 0 10
+v 10 0 200
+v 200 0 200
+v 200 0 10
+v 10 0 10
+vt 0.625000 0.500000
+vn 0 1 0
+vn 0 -1 0
+vn -9500 0 0
+vn 0 0 9500
+vn 9500 0 0
+vn 0 0 -9500
+vn 0 0 0
+g box_Cube
+usemtl Material01
+s off
+f 7 6 9 
+f 9 8 7 
+f 4 9 6 1
+f 1 6 7 2
+f 2 7 8 3
+f 3 8 9 4
+f 4 9 9 4
