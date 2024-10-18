@@ -23,7 +23,7 @@ impl AppState {
 pub fn establish_connection() -> DbPool {
     dotenv().ok();
     let database_url =
-       "mysql://members:Helloworld66%23%23@localhost:3306/3dRender".to_string();
+       "mysql://members: 3dhelloworld@localhost:3306/3dRender".to_string();
     // let database_url = if env::var("ENVIRONMENT").unwrap_or_else(|_| "DEVELOPMENT".to_string())
     //     == "PRODUCTION"
     // {
